@@ -1,4 +1,34 @@
+.img-fondo {
+    /* inicio */
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    /* Ocupa el 100% de la ventana */
+    background-image: url('../img/man-horizon.jpg');
+    background-size: cover;
+    /* Cubre todo el área sin distorsionar */
+}
+
+.navbar-inicio {
+    position: absolute; /* Superponerlo sobre la hero-section */
+    width: 100%;
+    background-color: #0000004D; /* Fondo negro con 30% de opacidad */
+    padding: 1.5rem 1rem;
+    display: flex;
+    justify-content: flex-end;
+    font-size: 1.25rem;
+}
+
+.nav-link-inicio {
+    color: white;
+    text-decoration: none;
+    /* Elimina el subrayado de los enlaces */
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
 .navbar {
+    /* network */
     padding: 1.5rem 1rem;
     font-size: 1.25rem;
     background-color: #2563EB;
@@ -13,10 +43,19 @@
 
 .nav-link {
     font-size: 1.25rem;
-    padding: 0.75rem 1rem;
     color: white;
 }
 
-.nav-link:hover, .navbar-brand:hover, .btn:hover{
+.nav-item {
+    margin-right: 10%;
+}
+
+.d-flex {
+    margin-right: 5%;
+}
+
+.nav-link:hover,
+.navbar-brand:hover,
+.btn:hover {
     color: #059669;
 }
