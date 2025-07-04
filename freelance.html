@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NetWork</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="network.html">NetWork</a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="perfil.html">Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cursos.html">Cursos</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="freelance.html">Freelance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="soporte.html">Soporte</a></li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Buscar ofertas" aria-label="Buscar" />
+                    <button class="btn btn-outline-light" type="submit">Buscar</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-4">
+
+    <!-- FILTROS para búsqueda -->
+    <section class="filter-section">
+      <h3>Buscar ofertas freelance</h3>
+      <form id="filterForm" class="row g-3">
+        <div class="col-md-3">
+          <label for="categoria" class="form-label">Categoría</label>
+          <select id="categoria" class="form-select" name="categoria">
+            <option value="">Todas</option>
+            <option value="desarrollo-web">Desarrollo Web</option>
+            <option value="diseno-grafico">Diseño Gráfico</option>
+            <option value="marketing">Marketing</option>
+            <option value="escritura">Escritura</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="nivel" class="form-label">Nivel</label>
+          <select id="nivel" class="form-select" name="nivel">
+            <option value="">Todos</option>
+            <option value="basico">Básico</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="presupuesto" class="form-label">Presupuesto (USD)</label>
+          <select id="presupuesto" class="form-select" name="presupuesto">
+            <option value="">Cualquiera</option>
+            <option value="0-100">0 - 100</option>
+            <option value="100-500">100 - 500</option>
+            <option value="500-1000">500 - 1000</option>
+            <option value="1000+">Más de 1000</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="tipo" class="form-label">Tipo de trabajo</label>
+          <select id="tipo" class="form-select" name="tipo">
+            <option value="">Todos</option>
+            <option value="remoto">Remoto</option>
+            <option value="presencial">Presencial</option>
+            <option value="hibrido">Híbrido</option>
+          </select>
+        </div>
+
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary">Buscar</button>
+          <button type="reset" class="btn btn-secondary ms-2">Limpiar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- LISTADO DE OFERTAS -->
+    <section id="offersList">
+      <h3>Ofertas disponibles</h3>
+
+      <!-- Oferta ejemplo -->
+      <article class="offer-card">
+        <h5>Desarrollador Frontend React</h5>
+        <p><strong>Categoría:</strong> Desarrollo Web | <strong>Nivel:</strong> Intermedio | <strong>Presupuesto:</strong> $300</p>
+        <p><strong>Tipo:</strong> Remoto</p>
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerDetailsModal">Ver detalles</button>
+        <button class="btn btn-success btn-sm ms-2">Aplicar</button>
+      </article>
+
+      <article class="offer-card">
+        <h5>Diseñador gráfico para branding</h5>
+        <p><strong>Categoría:</strong> Diseño Gráfico | <strong>Nivel:</strong> Básico | <strong>Presupuesto:</strong> $150</p>
+        <p><strong>Tipo:</strong> Presencial</p>
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerDetailsModal">Ver detalles</button>
+        <button class="btn btn-success btn-sm ms-2">Aplicar</button>
+      </article>
+
+      <article class="offer-card">
+        <h5>Copywriter para blog de tecnología</h5>
+        <p><strong>Categoría:</strong> Escritura | <strong>Nivel:</strong> Avanzado | <strong>Presupuesto:</strong> $600</p>
+        <p><strong>Tipo:</strong> Híbrido</p>
+        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerDetailsModal">Ver detalles</button>
+        <button class="btn btn-success btn-sm ms-2">Aplicar</button>
+      </article>
+    </section>
+
+    <!-- Ver detalles de oferta -->
+    <div class="modal fade" id="offerDetailsModal" tabindex="-1" aria-labelledby="offerDetailsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="offerDetailsModalLabel">Detalles de la oferta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <h6>Desarrollador Frontend React</h6>
+            <p><strong>Descripción:</strong> Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.</p>
+            <p><strong>Requisitos:</strong></p>
+            <ul>
+              <li>Experiencia mínima 1 año con React</li>
+              <li>Conocimiento de REST APIs</li>
+              <li>Trabajo remoto</li>
+            </ul>
+            <p><strong>Beneficios:</strong> Pago puntual, flexibilidad horaria.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success">Aplicar a esta oferta</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publicar oferta -->
+    <section class="publish-section">
+      <h3>Publicar una oferta freelance</h3>
+      <form id="publishOfferForm" class="row g-3">
+        <div class="col-md-6">
+          <label for="tituloOferta" class="form-label">Título de la oferta</label>
+          <input type="text" class="form-control" id="tituloOferta" name="tituloOferta" required />
+        </div>
+        <div class="col-md-6">
+          <label for="categoriaOferta" class="form-label">Categoría</label>
+          <select id="categoriaOferta" class="form-select" name="categoriaOferta" required>
+            <option value="">Seleccione...</option>
+            <option value="desarrollo-web">Desarrollo Web</option>
+            <option value="diseno-grafico">Diseño Gráfico</option>
+            <option value="marketing">Marketing</option>
+            <option value="escritura">Escritura</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label for="nivelOferta" class="form-label">Nivel requerido</label>
+          <select id="nivelOferta" class="form-select" name="nivelOferta" required>
+            <option value="">Seleccione...</option>
+            <option value="basico">Básico</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label for="presupuestoOferta" class="form-label">Presupuesto (USD)</label>
+          <input type="number" class="form-control" id="presupuestoOferta" name="presupuestoOferta" min="0" required />
+        </div>
+
+        <div class="col-md-4">
+          <label for="tipoOferta" class="form-label">Tipo de trabajo</label>
+          <select id="tipoOferta" class="form-select" name="tipoOferta" required>
+            <option value="">Seleccione...</option>
+            <option value="remoto">Remoto</option>
+            <option value="presencial">Presencial</option>
+            <option value="hibrido">Híbrido</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label for="descripcionOferta" class="form-label">Descripción</label>
+          <textarea id="descripcionOferta" class="form-control" name="descripcionOferta" rows="4" required></textarea>
+        </div>
+
+        <div class="col-12 text-end">
+          <button type="submit" class="btn btn-primary">Publicar oferta</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+    <footer class="footer text-center mt-5 py-4 bg-light">
+        <div class="container">
+            <h5 class="text-uppercase">NetWork</h5>
+            <p>¡Muchas gracias por visitarnos!</p>
+        </div>
+    </footer>
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/freelance.js"></script>
+
+</body>
+
+</html>
