@@ -59,3 +59,33 @@
 .btn:hover {
     color: #059669;
 }
+
+/* Empieza Freelance */
+/* Para que las tarjetas tengan sombra y estén alineadas */
+#lista-ofertas .card {
+    transition: transform 0.3s ease;
+}
+
+
+/* Ajustes en badges */
+.badge {
+    font-size: 0.85rem;
+}
+
+
+.filter-section, .offer-card, .publish-section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgb(0 0 0 / 0.1);
+      margin-bottom: 20px;
+    }
+
+    .offer-card {
+      margin-bottom: 15px;
+    }
+
+    .modal-header, .modal-footer {
+      border: none;
+    }
+/* Termina Freelance */
