@@ -12,80 +12,326 @@
 .navbar-inicio {
     position: absolute; /* Superponerlo sobre la hero-section */
     width: 100%;
-    background-color: #0000004D; /* Fondo negro con 30% de opacidad */
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.9), rgba(37, 99, 235, 0.9));
+    backdrop-filter: blur(10px);
     padding: 1.5rem 1rem;
     display: flex;
     justify-content: flex-end;
     font-size: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link-inicio {
-    color: white;
+    color: #ffffff;
     text-decoration: none;
-    /* Elimina el subrayado de los enlaces */
-    font-weight: bold;
-    padding: 5px 10px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
+.nav-link-inicio::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link-inicio:hover::before {
+    left: 100%;
+}
+
+.nav-link-inicio:hover {
+    color: #10b981;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Estilos del navbar */
 .navbar {
-    /* network */
     padding: 1.5rem 1rem;
     font-size: 1.25rem;
-    background-color: #2563EB;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .navbar-brand {
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: white;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #ffffff;
     margin-right: 5%;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: #10b981;
+    transform: scale(1.05);
 }
 
 .nav-link {
-    font-size: 1.25rem;
-    color: white;
+    font-size: 1.15rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #10b981, #059669);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 80%;
+}
+
+.nav-link:hover {
+    color: #10b981;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
 }
 
 .nav-item {
-    margin-right: 10%;
+    margin-right: 8px;
 }
 
-.d-flex {
+.navbar .d-flex {
     margin-right: 5%;
 }
 
-.nav-link:hover,
-.navbar-brand:hover,
-.btn:hover {
-    color: #059669;
+.navbar .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    transition: all 0.3s ease;
 }
 
-/* Empieza Freelance */
-/* Para que las tarjetas tengan sombra y estén alineadas */
-#lista-ofertas .card {
-    transition: transform 0.3s ease;
+.navbar .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
 }
 
-
-/* Ajustes en badges */
-.badge {
-    font-size: 0.85rem;
+.navbar .form-control::placeholder {
+    color: #cbd5e1;
 }
 
+.navbar .btn-outline-light {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
 
-.filter-section, .offer-card, .publish-section {
-      background-color: white;
-      padding: 20px;
-      border-radius: 6px;
-      box-shadow: 0 0 6px rgb(0 0 0 / 0.1);
-      margin-bottom: 20px;
-    }
+.navbar .btn-outline-light:hover {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
 
-    .offer-card {
-      margin-bottom: 15px;
-    }
+/* Mejoras del navbar toggler */
+.navbar-toggler {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
 
-    .modal-header, .modal-footer {
-      border: none;
-    }
-/* Termina Freelance */
+.navbar-toggler:hover {
+    border-color: #10b981;
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+    
+.navbar-brand {
+    font-size: 1.6rem;
+}
+    
+.nav-link {
+    margin: 0.2rem 0;
+}
+    
+.navbar .d-flex {
+    margin-top: 1rem;
+    margin-right: 0;
+}
+
+/* Espaciado del cuerpo para footer fijo */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    flex: 1;
+}
+
+/* Estilos del footer */
+.footer {
+    width: 100%;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    color: #ffffff;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer h5 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.footer h6 {
+    color: #f1f5f9;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.footer p {
+    line-height: 1.6;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+}
+
+.footer a {
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.footer a:hover {
+    color: #10b981;
+    text-decoration: none;
+    transform: translateX(3px);
+}
+
+.footer .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer .social-links a:hover {
+    background-color: #10b981;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.footer ul li {
+    margin-bottom: 0.7rem;
+}
+
+.footer ul li a {
+    font-size: 0.95rem;
+    padding: 0.3rem 0;
+    display: block;
+    color: #e2e8f0;
+    position: relative;
+}
+
+.footer ul li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #10b981;
+    transition: width 0.3s ease;
+}
+
+.footer ul li a:hover::before {
+    width: 100%;
+}
+
+.footer hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    margin: 2.5rem 0;
+}
+
+.footer .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+}
+
+.footer .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.25);
+}
+
+.footer .form-control::placeholder {
+    color: #cbd5e1;
+}
+
+.footer .btn-primary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.footer .btn-primary:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.footer .text-muted {
+    color: #e2e8f0 !important;
+}
