@@ -1,0 +1,125 @@
+// Componente de footer para NetWork
+
+// Crear el HTML del footer
+function createFooter() {
+    const footerHTML = `
+        <div class="container py-3 mt-1">
+            <div class="row justify-content-center text-center">
+                <!-- Columna 1: Sobre NetWork -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="text-uppercase mb-3">NetWork</h5>
+                    <p class="text-muted">
+                        La plataforma lider para profesionales que buscan conectar, aprender y hacer crecer su carrera. 
+                        Unete a nuestra comunidad global.
+                    </p>
+                    <div class="social-links d-center">
+                        <a href="#" class="me-3" title="Facebook" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="me-3" title="Twitter" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="me-3" title="LinkedIn" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Enlaces rapidos -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3">Enlaces rapidos</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="network.html" class="text-decoration-none">Inicio</a></li>
+                        <li><a href="perfil.html" class="text-decoration-none">Mi Perfil</a></li>
+                        <li><a href="cursos.html" class="text-decoration-none">Cursos</a></li>
+                        <li><a href="freelance.html" class="text-decoration-none">Freelance</a></li>
+                        <li><a href="soporte.html" class="text-decoration-none">Soporte</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Recursos -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3">Recursos</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Blog</a></li>
+                        <li><a href="#" class="text-decoration-none">Guias</a></li>
+                        <li><a href="#" class="text-decoration-none">Webinars</a></li>
+                        <li><a href="#" class="text-decoration-none">Casos de exito</a></li>
+                        <li><a href="#" class="text-decoration-none">Centro de ayuda</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Empresa -->
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3">Empresa</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">Nosotros</a></li>
+                        <li><a href="#" class="text-decoration-none">Carreras</a></li>
+                        <li><a href="#" class="text-decoration-none">Prensa</a></li>
+                        <li><a href="#" class="text-decoration-none">Contacto</a></li>
+                        <li><a href="#" class="text-decoration-none">Afiliados</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 5: Newsletter -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h6 class="text-uppercase mb-3">Newsletter</h6>
+                    <p class="text-muted mb-3">Recibe las ultimas noticias y oportunidades directamente en tu email.</p>
+                    <form class="d-flex flex-column" onsubmit="handleNewsletterSubmit(event)">
+                        <div class="mb-2">
+                            <input type="email" class="form-control" placeholder="Tu email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Copyright y politicas -->
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="text-muted mb-0">
+                        &copy; 2024 NetWork. Todos los derechos reservados.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="#" class="text-decoration-none me-3">Privacidad</a>
+                    <a href="#" class="text-decoration-none me-3">Terminos</a>
+                    <a href="#" class="text-decoration-none">Cookies</a>
+                </div>
+            </div>
+        </div>
+    `;
+    return footerHTML;
+}
+
+// Función para manejar la suscripción al newsletter
+function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const email = event.target.querySelector('input[type="email"]').value;
+    
+    // Validación simple
+    if (email) {
+        alert('¡Gracias por suscribirte! Te mantendremos informado sobre las ultimas novedades.');
+        event.target.reset();
+    }
+}
+
+// Función para insertar el footer en la página
+function insertFooter() {
+    console.log('Insertando footer...');
+    const footerElement = document.querySelector('footer');
+    if (footerElement) {
+        footerElement.innerHTML = createFooter();
+        console.log('Footer insertado correctamente');
+    } else {
+        console.error('Elemento footer no encontrado');
+    }
+}
