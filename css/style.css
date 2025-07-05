@@ -150,7 +150,6 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-
 .navbar-brand {
     font-size: 1.6rem;
 }
@@ -312,4 +311,297 @@ section {
 
 .footer .text-muted {
     color: #e2e8f0 !important;
+}
+
+/* Estilos específicos para la página de aprendizaje */
+.learn-hero {
+    position: relative;
+    min-height: 80vh;
+    background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
+    overflow: hidden;
+    padding: 6rem 0;
+}
+
+.learn-hero::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+}
+
+.learn-hero h1, .learn-hero p {
+    color: #212529;
+}
+
+.learn-content {
+    position: relative;
+    z-index: 1;
+}
+
+.learn-search {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    padding: 0.8rem 1.5rem;
+    color: #495057;
+    font-size: 1.2rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.learn-search:focus {
+    background: #ffffff;
+    border-color: #228be6;
+    box-shadow: 0 0 0 4px rgba(34, 139, 230, 0.15);
+    outline: none;
+}
+
+.learn-categories {
+    background: #ffffff;
+    padding: 5rem 0;
+    position: relative;
+}
+
+.learn-category-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 24px;
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.learn-category-card .d-flex {
+    padding-right: 1rem;
+}
+
+.learn-category-card .bi-arrow-right {
+    margin-right: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.learn-category-card:hover .bi-arrow-right {
+    transform: translateX(-5px);
+}
+
+.learn-category-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #228be6;
+    box-shadow: 0 20px 40px rgba(34, 139, 230, 0.1);
+}
+
+.learn-category-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #228be6, #15aabf);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.learn-courses {
+    background: #f8f9fa;
+    padding: 5rem 0;
+}
+
+.learn-course-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.learn-course-card:hover {
+    transform: translateY(-10px);
+    border-color: #228be6;
+    box-shadow: 0 20px 40px rgba(34, 139, 230, 0.1);
+}
+
+.learn-course-image {
+    position: relative;
+    overflow: hidden;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+}
+
+.learn-course-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.learn-course-card:hover .learn-course-image img {
+    transform: scale(1.1);
+}
+
+.learn-course-content {
+    padding: 1.5rem;
+    color: #495057;
+}
+
+.learn-course-content h5 {
+    color: #212529;
+}
+
+.learn-course-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background: rgba(34, 139, 230, 0.1);
+    color: #228be6;
+    backdrop-filter: blur(4px);
+}
+
+.learn-course-progress {
+    height: 4px;
+    background: rgba(34, 139, 230, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.learn-course-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #228be6, #15aabf);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+}
+
+.learn-benefits {
+    background: #ffffff;
+    padding: 5rem 0;
+    position: relative;
+}
+
+.learn-benefit-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.learn-benefit-card:hover {
+    transform: translateY(-5px);
+    border-color: #228be6;
+    box-shadow: 0 15px 30px rgba(34, 139, 230, 0.1);
+}
+
+.learn-benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #228be6;
+}
+
+.learn-benefit-card h4 {
+    color: #212529;
+}
+
+.learn-benefit-card p {
+    color: #495057;
+}
+
+/* Estilos para el modal de curso */
+.learn-modal .modal-content {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 24px;
+    color: #212529;
+}
+
+.learn-modal .modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1.5rem;
+    position: relative;
+}
+
+.learn-modal .modal-body {
+    padding: 2rem;
+}
+
+.learn-modal .btn-close {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    opacity: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.learn-modal .btn-close:hover {
+    background: #f8f9fa;
+    transform: rotate(90deg);
+    border-color: #dee2e6;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.learn-feature-list li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.learn-feature-list i {
+    color: #228be6;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+}
+
+.learn-price-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.learn-btn-primary {
+    background: linear-gradient(135deg, #228be6, #15aabf);
+    border: none;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.learn-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(34, 139, 230, 0.2);
+}
+
+.learn-btn-outline {
+    background: transparent;
+    border: 2px solid #228be6;
+    color: #228be6;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.learn-btn-outline:hover {
+    background: rgba(34, 139, 230, 0.1);
+    transform: translateY(-2px);
 }
