@@ -15,7 +15,7 @@ function createHeader() {
                             <a class="nav-link" href="perfil.html">Perfil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="cursos.html">Cursos</a>
+                            <a class="nav-link" href="aprender.html">Aprender</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="freelance.html">Freelance</a>
