@@ -3,7 +3,7 @@
 // Crear el HTML del footer
 function createFooter() {
     const footerHTML = `
-        <div class="container py-3 mt-1">
+        <div class="container py-3 mt-3">
             <div class="row justify-content-center text-center">
                 <!-- Columna 1: Sobre NetWork -->
                 <div class="col-lg-3 col-md-6 mb-4">
@@ -32,7 +32,7 @@ function createFooter() {
                 </div>
 
                 <!-- Columna 2: Enlaces rapidos -->
-                <div class="col-lg-2 col-md-6 mb-4">
+                <div class="col-lg-2 col-md-6">
                     <h6 class="text-uppercase mb-3">Enlaces rapidos</h6>
                     <ul class="list-unstyled">
                         <li><a href="network.html" class="text-decoration-none">Inicio</a></li>
@@ -44,7 +44,7 @@ function createFooter() {
                 </div>
 
                 <!-- Columna 3: Recursos -->
-                <div class="col-lg-2 col-md-6 mb-4">
+                <div class="col-lg-2 col-md-6">
                     <h6 class="text-uppercase mb-3">Recursos</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-decoration-none">Blog</a></li>
@@ -56,7 +56,7 @@ function createFooter() {
                 </div>
 
                 <!-- Columna 4: Empresa -->
-                <div class="col-lg-2 col-md-6 mb-4">
+                <div class="col-lg-2 col-md-6">
                     <h6 class="text-uppercase mb-3">Empresa</h6>
                     <ul class="list-unstyled">
                         <li><a href="#" class="text-decoration-none">Nosotros</a></li>
@@ -68,7 +68,7 @@ function createFooter() {
                 </div>
 
                 <!-- Columna 5: Newsletter -->
-                <div class="col-lg-3 col-md-6 mb-4">
+                <div class="col-lg-3 col-md-6">
                     <h6 class="text-uppercase mb-3">Newsletter</h6>
                     <p class="text-muted mb-3">Recibe las ultimas noticias y oportunidades directamente en tu email.</p>
                     <form class="d-flex flex-column" onsubmit="handleNewsletterSubmit(event)">
@@ -80,13 +80,13 @@ function createFooter() {
                 </div>
             </div>
 
-            <hr class="my-4">
+            <hr class="my-3">
 
             <!-- Copyright y politicas -->
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <p class="text-muted mb-0">
-                        &copy; 2024 NetWork. Todos los derechos reservados.
+                        &copy; 2025 NetWork. Todos los derechos reservados.
                     </p>
                 </div>
                 <div class="col-md-4 text-md-end">
@@ -104,7 +104,7 @@ function createFooter() {
 function handleNewsletterSubmit(event) {
     event.preventDefault();
     const email = event.target.querySelector('input[type="email"]').value;
-    
+
     // Validación simple
     if (email) {
         alert('¡Gracias por suscribirte! Te mantendremos informado sobre las ultimas novedades.');
