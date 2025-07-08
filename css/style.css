@@ -615,3 +615,8 @@ section {
     background: rgba(34, 139, 230, 0.1);
     transform: translateY(-2px);
 }
+
+.learn-hero.soporte {
+    min-height: 50vh;
+    padding: 4rem 0;
+}
