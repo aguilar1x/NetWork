@@ -71,7 +71,7 @@
 .main-text {
     max-width: 800px;
     text-align: center;
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 .index-benefits {
@@ -92,6 +92,81 @@
         opacity: 1;
         scale: 1;
     }
+}
+
+/* Perfil */
+.learn-hero-profile {
+    min-height: 30vh;
+    padding: 3rem 0;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+/* Estilo del aside */
+.sidebar {
+    width: 500px;
+    background-color: #f4f4f4;
+    padding: 3rem;
+    border-radius: 20px;
+}
+
+.info-section {
+    position: relative;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 2rem;
+    color: #228be6;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.settings-icon:hover {
+    transform: rotate(30deg);
+}
+
+.logout-icon {
+    position: absolute;
+    top: -8px;
+    right: 30px;
+    font-size: 2rem;
+    color: #228be6;
+}
+
+.switch1 {
+    position: absolute;
+    top: 28%;
+    right: 3%;
+    transform: scale(1.4);
+}
+
+.switch2 {
+    position: absolute;
+    top: 37%;
+    right: 3%;
+    transform: scale(1.4);
+}
+
+.switch3 {
+    position: absolute;
+    top: 47%;
+    right: 3%;
+    transform: scale(1.4);
+}
+
+.switch4 {
+    position: absolute;
+    top: 57%;
+    right: 3%;
+    transform: scale(1.4);
 }
 
 /* Estilos del navbar */
