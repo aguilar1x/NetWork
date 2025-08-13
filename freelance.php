@@ -385,6 +385,15 @@ $tipo_filtro = $_GET['tipo'] ?? '';
     </div>
     <?php endforeach; ?>
 
+    <!-- Footer -->
+    <footer class="footer text-center mt-1"></footer>
+
+    <script>
+        // Pasar datos del usuario a JavaScript
+        window.currentUser = {
+            nombre: '<?php echo htmlspecialchars($currentUser['nombre']); ?>'
+        };
+    </script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="./js/freelance.js"></script>
     <script src="./js/components/header.js"></script>

@@ -37,16 +37,6 @@ $currentUser = User::getCurrentUser();
                     <h4 class="text-white mb-0">Bienvenido, <?php echo htmlspecialchars($currentUser['nombre']); ?>!</h4>
                 </div>
                 <ul class="d-flex gap-3 list-unstyled mb-0">
-                    <li>
-                        <a class="nav-link-inicio" href="aprender.php">Aprender</a>
-                    </li>
-                    <li>
-                        <a class="nav-link-inicio" href="freelance.php">Freelance</a>
-                    </li>
-                    <li>
-                        <a class="nav-link-inicio" href="network.php">Network</a>
-                    </li>
-                    <li>
                         <a class="nav-link-inicio" href="logout.php">Cerrar Sesión</a>
                     </li>
                 </ul>
@@ -89,6 +79,7 @@ $currentUser = User::getCurrentUser();
             </div>
         </div>
     </section>
-</body>
+      <script src="./js/index.js"></script>
+  </body>
 
 </html>

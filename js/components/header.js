@@ -1,33 +1,41 @@
 // Componente de header para NetWork
 
 // Crear el HTML del header
-function createHeader() {
+function createHeader(userName = 'Usuario') {
     const headerHTML = `
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="network.html">NetWork</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="inicio.php">NetWork</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="perfil.html">Perfil</a>
+                            <a class="nav-link" href="inicio.php">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="aprender.html">Aprender</a>
+                            <a class="nav-link" href="aprender.php">Aprender</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="freelance.html">Freelance</a>
+                            <a class="nav-link" href="freelance.php">Freelance</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="soporte.html">Soporte</a>
+                            <a class="nav-link" href="network.php">Network</a>
                         </li>
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search" />
-                        <button type="button" class="btn btn-outline-light">Buscar</button>
-                    </form>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> ${userName}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="perfil.php">Mi Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="logout.php">Cerrar Sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -36,11 +44,13 @@ function createHeader() {
 }
 
 // Función para insertar el header en la página
-function insertHeader() {
+function insertHeader(userName) {
     console.log('Insertando header...');
     const headerElement = document.querySelector('header');
     if (headerElement) {
-        headerElement.innerHTML = createHeader();
+        // Si hay datos de usuario global, usarlos
+        const userToDisplay = userName || window.currentUser?.nombre || 'Usuario';
+        headerElement.innerHTML = createHeader(userToDisplay);
         console.log('Header insertado correctamente');
     } else {
         console.error('Elemento header no encontrado');

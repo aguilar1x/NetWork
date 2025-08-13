@@ -28,7 +28,7 @@ $profesionales = [
         'ubicacion' => 'Madrid, España',
         'experiencia' => '5 años',
         'skills' => ['React', 'JavaScript', 'CSS', 'HTML'],
-        'avatar' => 'https://via.placeholder.com/80x80?text=AG',
+        'avatar' => 'img/avatar.jpg',
         'descripcion' => 'Desarrolladora Frontend especializada en React y tecnologías modernas.',
         'conexiones' => 150,
         'proyectos' => 23
@@ -41,7 +41,7 @@ $profesionales = [
         'ubicacion' => 'Barcelona, España',
         'experiencia' => '3 años',
         'skills' => ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
-        'avatar' => 'https://via.placeholder.com/80x80?text=CR',
+        'avatar' => 'img/avatar.jpg',
         'descripcion' => 'Diseñador UX/UI con pasión por crear experiencias digitales excepcionales.',
         'conexiones' => 89,
         'proyectos' => 15
@@ -54,7 +54,7 @@ $profesionales = [
         'ubicacion' => 'Valencia, España',
         'experiencia' => '7 años',
         'skills' => ['SEM', 'SEO', 'Analytics', 'Content Strategy'],
-        'avatar' => 'https://via.placeholder.com/80x80?text=LF',
+        'avatar' => 'img/avatar.jpg',
         'descripcion' => 'Experta en marketing digital con enfoque en growth hacking y estrategia.',
         'conexiones' => 245,
         'proyectos' => 42
@@ -67,7 +67,7 @@ $profesionales = [
         'ubicacion' => 'Sevilla, España',
         'experiencia' => '4 años',
         'skills' => ['Node.js', 'Python', 'MongoDB', 'AWS'],
-        'avatar' => 'https://via.placeholder.com/80x80?text=MT',
+        'avatar' => 'img/avatar.jpg',
         'descripcion' => 'Desarrollador Full Stack con experiencia en arquitecturas escalables.',
         'conexiones' => 120,
         'proyectos' => 18
@@ -379,7 +379,16 @@ $ubicacion_filtro = $_GET['ubicacion'] ?? '';
     </div>
     <?php endforeach; ?>
 
+    <!-- Footer -->
+    <footer class="footer text-center mt-1"></footer>
+
     <!-- Scripts -->
+    <script>
+        // Pasar datos del usuario a JavaScript
+        window.currentUser = {
+            nombre: '<?php echo htmlspecialchars($currentUser['nombre']); ?>'
+        };
+    </script>
     <script src="./js/components/header.js"></script>
     <script src="./js/components/footer.js"></script>
     <script src="./js/index.js"></script>
