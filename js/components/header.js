@@ -23,6 +23,9 @@ function createHeader(userName = 'Usuario') {
                         <li class="nav-item">
                             <a class="nav-link" href="network.php">Network</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="soporte.php">Soporte</a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">

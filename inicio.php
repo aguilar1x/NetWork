@@ -38,6 +38,21 @@ if ($userLoggedIn) {
                         <?php if ($userLoggedIn): ?>
                             <!-- Menú para usuarios autenticados -->
                             <li>
+                                <a class="nav-link-inicio" href="aprender.php">Aprender</a>
+                            </li>
+                            <li>
+                                <a class="nav-link-inicio" href="freelance.php">Freelance</a>
+                            </li>
+                            <li>
+                                <a class="nav-link-inicio" href="network.php">Network</a>
+                            </li>
+                            <li>
+                                <a class="nav-link-inicio" href="soporte.php">Soporte</a>
+                            </li>
+                            <li>
+                                <a class="nav-link-inicio" href="perfil.php">Mi Perfil</a>
+                            </li>
+                            <li>
                                 <a class="nav-link-inicio" href="logout.php">Cerrar Sesión</a>
                             </li>
                         <?php else: ?>
@@ -278,77 +293,17 @@ if ($userLoggedIn) {
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container py-5">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5>NetWork</h5>
-                    <p>Tu plataforma para el crecimiento profesional y el networking efectivo.</p>
-                    <div class="social-links">
-                        <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
-                        <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
-                    </div>
-                </div>
-                
-                <div class="col-md-2 mb-4">
-                    <h6>Plataforma</h6>
-                    <ul class="list-unstyled">
-                        <?php if (!$userLoggedIn): ?>
-                            <li><a href="registro.php">Registrarse</a></li>
-                            <li><a href="login.php">Iniciar Sesión</a></li>
-                        <?php endif; ?>
-                        <li><a href="aprender.php">Cursos</a></li>
-                        <li><a href="freelance.php">Freelance</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-md-2 mb-4">
-                    <h6>Recursos</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Guías</a></li>
-                        <li><a href="#">Webinars</a></li>
-                        <li><a href="#">Eventos</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-md-2 mb-4">
-                    <h6>Soporte</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="soporte.php">Centro de Ayuda</a></li>
-                        <li><a href="#">Contacto</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Estado del Sistema</a></li>
-                    </ul>
-                </div>
-                
-                <div class="col-md-2 mb-4">
-                    <h6>Legal</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Términos de Uso</a></li>
-                        <li><a href="#">Privacidad</a></li>
-                        <li><a href="#">Cookies</a></li>
-                        <li><a href="#">Seguridad</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="text-muted mb-0">© 2024 NetWork. Todos los derechos reservados.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <small class="text-muted">Hecho con ❤️ para impulsar tu carrera profesional</small>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <footer class="mt-5"></footer>
+    <script src="./js/components/footer.js"></script>
 
     <script src="./js/index.js"></script>
+    <?php if ($userLoggedIn): ?>
+    <script>
+        window.currentUser = {
+            nombre: '<?php echo htmlspecialchars($currentUser['nombre']); ?>'
+        };
+    </script>
+    <?php endif; ?>
 </body>
 
 </html>

@@ -71,74 +71,113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
+
 <head>
     <title>Registro - NetWork</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
-<body>
-    <div class="registro-container">
-        <div class="registro-card">
-            <div class="registro-header">
-                <h2>Crear Cuenta</h2>
-                <p>Únete a NetWork y conecta con el mundo profesional</p>
-            </div>
-
-            <!-- Mostrar mensaje de error si existe -->
-            <?php if ($error): ?>
-                <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
-            <?php endif; ?>
-
-            <!-- Mostrar mensaje de éxito si existe -->
-            <?php if ($success): ?>
-                <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
-            <?php endif; ?>
-
-            <!-- Formulario de registro -->
-            <form method="POST">
-                <div class="form-group">
-                    <label for="nombre">Nombre Completo:</label>
-                    <input type="text" id="nombre" name="nombre" class="form-control" required 
-                           value="<?php echo htmlspecialchars($_POST['nombre'] ?? ''); ?>" placeholder="Tu nombre completo">
-                </div>
-
-                <div class="form-group">
-                    <label for="usuario">Usuario:</label>
-                    <input type="text" id="usuario" name="usuario" class="form-control" required 
-                           value="<?php echo htmlspecialchars($_POST['usuario'] ?? ''); ?>" placeholder="Nombre de usuario único">
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" required 
-                           value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" placeholder="tu@email.com">
-                </div>
-
-                <div class="form-group">
-                    <label for="contrasena">Contraseña:</label>
-                    <input type="password" id="contrasena" name="contrasena" class="form-control" required 
-                           placeholder="Mínimo 6 caracteres">
-                </div>
-
-                <div class="form-group">
-                    <label for="confirmar_contrasena">Confirmar Contraseña:</label>
-                    <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" class="form-control" required 
-                           placeholder="Confirma tu contraseña">
-                </div>
-
-                <button type="submit" class="btn btn-registro">Crear Cuenta</button>
-            </form>
-
-            <div class="login-link">
-                <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a></p>
+<body class="auth-body">
+    <!-- Header -->
+    <header class="auth-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="index.php" class="auth-brand">
+                    NetWork
+                </a>
+                <a href="login.php" class="auth-nav-link">
+                    <strong>Inicia Sesión</strong>
+                </a>
             </div>
         </div>
-    </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="auth-main">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="auth-card-clean">
+                        <div class="text-center mb-4">
+                            <h1 class="auth-title-clean">Crear tu cuenta</h1>
+                            <p class="auth-subtitle-clean">Únete a NetWork y conecta con profesionales</p>
+                        </div>
+
+                        <!-- Mostrar mensaje de error si existe -->
+                        <?php if ($error): ?>
+                            <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
+                        <?php endif; ?>
+
+                        <!-- Mostrar mensaje de éxito si existe -->
+                        <?php if ($success): ?>
+                            <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
+                        <?php endif; ?>
+
+                        <form method="POST" class="auth-form-clean">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">
+                                    <i class="bi bi-person me-2 text-primary"></i>Nombre completo
+                                </label>
+                                <input type="text" id="nombre" name="nombre" class="form-control form-control-clean" 
+                                       placeholder="Tu nombre completo" required 
+                                       value="<?php echo htmlspecialchars($_POST['nombre'] ?? ''); ?>" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="usuario" class="form-label">
+                                    <i class="bi bi-at me-2 text-primary"></i>Nombre de usuario
+                                </label>
+                                <input type="text" id="usuario" name="usuario" class="form-control form-control-clean" 
+                                       placeholder="Nombre de usuario único" required 
+                                       value="<?php echo htmlspecialchars($_POST['usuario'] ?? ''); ?>" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope me-2 text-primary"></i>Correo electrónico
+                                </label>
+                                <input type="email" id="email" name="email" class="form-control form-control-clean" 
+                                       placeholder="ejemplo@correo.com" required 
+                                       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contrasena" class="form-label">
+                                    <i class="bi bi-lock me-2 text-primary"></i>Contraseña
+                                </label>
+                                <input type="password" id="contrasena" name="contrasena" class="form-control form-control-clean" 
+                                       placeholder="Mínimo 6 caracteres" minlength="6" required />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="confirmar_contrasena" class="form-label">
+                                    <i class="bi bi-lock me-2 text-primary"></i>Confirmar contraseña
+                                </label>
+                                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" class="form-control form-control-clean" 
+                                       placeholder="Repite tu contraseña" minlength="6" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary-clean w-100 mb-3">
+                                Registrarse
+                            </button>
+                        </form>
+
+                        <div class="text-center">
+                            <p class="text-muted mb-0">
+                                ¿Ya tienes cuenta? 
+                                <a href="login.php" class="link-primary">Inicia sesión aquí</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
     <script src="./js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
