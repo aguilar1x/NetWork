@@ -3,19 +3,13 @@
 ==============================
 PÁGINA PRINCIPAL
 ==============================
-Esta es la página de inicio que redirige 
-a los usuarios según su estado de autenticación
+Esta es la página principal que redirige 
+a inicio.php que maneja todo el contenido
 */
 
 require_once 'app/models/user.php';
 
-// Si el usuario ya está logueado, llevarlo al inicio
-if (User::isLoggedIn()) {
-    header('Location: inicio.php');
-    exit();
-} else {
-    // Si no está logueado, llevarlo al login
-    header('Location: login.php');
-    exit();
-}
+// Siempre redirigir a inicio.php (maneja tanto usuarios logueados como visitantes)
+header('Location: inicio.php');
+exit();
 ?>
