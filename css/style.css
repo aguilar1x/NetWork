@@ -1,4 +1,7 @@
-/* Inicio */
+/* ===========================================
+   ESTILOS PARA PÁGINA DE INICIO (INDEX)
+   =========================================== */
+
 .background-img {
     position: relative;
     width: 100%;
@@ -50,16 +53,6 @@
     animation: scale-up-center 2s;
 }
 
-@keyframes scale-up-center {
-    0% {
-        transform: scale(.5)
-    }
-
-    100% {
-        transform: scale(1)
-    }
-}
-
 .index-network {
     background: #ffffff;
     padding: 5rem 0;
@@ -82,6 +75,17 @@
     animation-range: entry 0;
 }
 
+/* Animaciones para la página de inicio */
+@keyframes scale-up-center {
+    0% {
+        transform: scale(.5)
+    }
+
+    100% {
+        transform: scale(1)
+    }
+}
+
 @keyframes appear {
     from {
         opacity: 0;
@@ -94,10 +98,195 @@
     }
 }
 
-/* Perfil */
-.learn-hero-profile {
-    min-height: 30vh;
+/* ===========================================
+   ESTILOS PARA FORMULARIOS DE AUTENTICACIÓN LIMPIOS
+   =========================================== */
+
+.auth-body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.auth-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.auth-brand:hover {
+    color: #10b981;
+    text-decoration: none;
+    transform: scale(1.05);
+}
+
+.auth-nav-link {
+    color: #e2e8f0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.auth-nav-link:hover {
+    color: #10b981;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.auth-main {
     padding: 3rem 0;
+    min-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+}
+
+.auth-card-clean {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    max-width: 100%;
+}
+
+.auth-title-clean {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle-clean {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.auth-form-clean .form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-control-clean {
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.15s ease-in-out;
+    background: #ffffff;
+}
+
+.form-control-clean:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-control-clean::placeholder {
+    color: #9ca3af;
+}
+
+.btn-primary-clean {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary-clean:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: white;
+}
+
+.btn-primary-clean:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.link-primary {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-primary:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.auth-card-clean .alert {
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.auth-card-clean .alert-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border-left: 4px solid #ef4444;
+}
+
+.auth-card-clean .alert-success {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border-left: 4px solid #22c55e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .auth-card-clean {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .auth-main {
+        padding: 1.5rem 0;
+    }
+    
+    .auth-title-clean {
+        font-size: 1.5rem;
+    }
+}
+
+/* ===========================================
+   ESTILOS PARA PÁGINA DE PERFIL
+   =========================================== */
+
+.learn-hero-profile {
+    min-height: 20vh;
+    padding: 2rem 0 1rem 0;
 }
 
 .layout-container {
@@ -105,9 +294,9 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 2rem;
+    margin-top: -1rem;
 }
 
-/* Estilo del aside */
 .sidebar {
     width: 500px;
     background-color: #f4f4f4;
@@ -169,13 +358,45 @@
     transform: scale(1.4);
 }
 
-/* Estilos del navbar */
+/* ===========================================
+   ESTILOS PARA PÁGINA DE SOPORTE
+   =========================================== */
+
+.learn-hero.soporte {
+    min-height: 20vh;
+    padding: 2rem 0 1rem 0;
+}
+
+/* Contenido de soporte más pegado al hero */
+.learn-hero.soporte + main .container {
+    margin-top: -1rem;
+}
+
+/* Fondo consistente para página de soporte */
+body {
+    background: #f8f9fa;
+}
+
+/* ===========================================
+   ESTILOS GLOBALES - NAVBAR
+   =========================================== */
 .navbar {
     padding: 1.5rem 1rem;
     font-size: 1.25rem;
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1050; /* Asegurar que esté por encima de otros elementos */
+}
+
+/* Asegurar que los dropdowns se muestren correctamente */
+.dropdown-menu {
+    z-index: 1055 !important;
+}
+
+.navbar .dropdown-menu {
+    z-index: 1055 !important;
 }
 
 .navbar-brand {
@@ -448,7 +669,9 @@ section {
     color: #e2e8f0 !important;
 }
 
-/* Estilos específicos para la página de aprendizaje */
+/* ===========================================
+   ESTILOS PARA PÁGINA DE APRENDIZAJE
+   =========================================== */
 .learn-hero {
     position: relative;
     min-height: 80vh;
@@ -500,6 +723,7 @@ section {
     background: #ffffff;
     padding: 5rem 0;
     position: relative;
+    margin-top: 1rem;
 }
 
 .learn-category-card {
@@ -654,7 +878,7 @@ section {
     color: #495057;
 }
 
-/* Estilos para el modal de curso */
+/* Estilos para modales de cursos */
 .learn-modal .modal-content {
     background: #ffffff;
     border: 1px solid #e9ecef;
@@ -744,7 +968,202 @@ section {
     transform: translateY(-2px);
 }
 
-.learn-hero.soporte {
-    min-height: 50vh;
-    padding: 4rem 0;
+/* ===========================================
+   ESTILOS PARA PÁGINA DE REGISTRO
+   =========================================== */
+.registro-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.registro-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.registro-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.registro-header h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.registro-header p {
+    color: #666;
+    margin: 0;
+}
+
+.registro-card .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.registro-card .form-group label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.registro-card .form-control {
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.registro-card .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.btn-registro {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.15s ease-in-out;
+}
+
+.btn-registro:hover {
+    transform: translateY(-1px);
+    color: white;
+}
+
+.registro-card .alert {
+    border-radius: 8px;
+    border: none;
+}
+
+.login-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+.registro-card .login-link {
+    color: #667eea;
+}
+
+/* ===========================================
+   ESTILOS PARA PÁGINA DE FREELANCE
+   =========================================== */
+.offer-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.offer-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.filter-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.publish-section {
+    background: #fff;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 3rem;
+}
+
+.badge-categoria {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+.price-highlight {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* ===========================================
+   ESTILOS PARA PÁGINA DE NETWORKING
+   =========================================== */
+.profile-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.skill-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    margin: 0.125rem;
+    display: inline-block;
+}
+
+.event-card {
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 1rem;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.search-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
 }
