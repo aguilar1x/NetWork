@@ -10,6 +10,7 @@ CREATE TABLE categoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_estado INT NOT NULL,
     nombre VARCHAR(100),
+    descripcion TEXT,
     FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
 
@@ -57,7 +58,7 @@ CREATE TABLE curso (
     id_estado INT NOT NULL,
     nombre VARCHAR(100),
     descripcion TEXT,
-    precio DOUBLE,
+    precio DECIMAL(10,2),
     tiempo_horas INT,
     imagen VARCHAR(1024),
     FOREIGN KEY (id_categoria) REFERENCES categoria(id),
@@ -71,7 +72,7 @@ CREATE TABLE oferta (
     nombre VARCHAR(100),
     descripcion TEXT,
     nivel VARCHAR(100) NOT NULL,
-    presupuesto DOUBLE,
+    presupuesto DECIMAL(10,2),
     modalidad VARCHAR(100) NOT NULL,
     nombre_empresa VARCHAR(100),
     fecha DATE,
@@ -85,9 +86,13 @@ CREATE TABLE oferta (
 INSERT INTO estado (tipo_estado) VALUES
 ('Activo'), ('Inactivo');
 
-INSERT INTO categoria (id_estado, nombre) VALUES
-(1, 'Desarrollo Web'), (1, 'Diseño UX/UI'), (1, 'Marketing Digital'),
-(1, 'Diseño Gráfico'), (1, 'Escritura'), (1, 'Otra');
+INSERT INTO categoria (id_estado, nombre, descripcion) VALUES
+(1, 'Desarrollo Web', 'Domina las tecnologías más demandadas en desarrollo frontend y backend.'), 
+(1, 'Diseño UX/UI', 'Crea experiencias digitales intuitivas y atractivas.'), 
+(1, 'Marketing Digital', 'Estrategias efectivas para el crecimiento digital.'),
+(1, 'Negocios Digitales', 'Transforma ideas en negocios digitales exitosos'),
+(1, 'Diseño Gráfico', 'Creación de logotipos, ilustraciones y material visual.'), 
+(1, 'Escritura', 'Redacción, corrección y creación de contenido.');
 
 INSERT INTO rol (nombre) VALUES
 ('Admin'), ('Usuario');
@@ -95,6 +100,7 @@ INSERT INTO rol (nombre) VALUES
 INSERT INTO usuarios (id_estado, id_rol, nombre, correo, usuario, contrasena) VALUES
 (1, 2, 'Usuario NetWork', 'usuario@network.com', 'usuario',
 '$2y$10$2O5vLHR.GEKQZFRgTAzpiebK0sIw2bZT4E5m4TP3wayqhOQGjhW5.'),
+
 (1, 1, 'Admin NetWork', 'admin@network.com', 'admin',
 '$2y$10$2O5vLHR.GEKQZFRgTAzpiebK0sIw2bZT4E5m4TP3wayqhOQGjhW5.');
 
@@ -107,8 +113,14 @@ INSERT INTO reporte (id_usuario, id_usuario_reportar, id_estado, motivo) VALUES
 (1, 2, 1, 'Publicación de oferta laboral falsa.');
 
 INSERT INTO curso (id_categoria, id_estado, nombre, descripcion, precio, tiempo_horas, imagen) VALUES
-(4, 1, 'Diseño Gráfico de Cero a Experto', 
-'Aprende los fundamentos del diseño gráfico, desde teoría del color y tipografía hasta el uso de herramientas como Photoshop y más.', 
+(1, 1, 'React desde Cero a Experto', 'Domina React.js y crea aplicaciones web modernas con las mejores prácticas.', 49.99, 15, '../img/react.jpg'), 
+
+(2, 1, 'Diseño UX/UI con Figma', 'Aprende a crear interfaces modernas y experiencias de usuario excepcionales.', 39.99, 12, '../img/figma.jpg'), 
+
+(3, 1, 'Marketing Digital Completo', 'Estrategias actualizadas de marketing digital y growth hacking.', 59.99, 20, '../img/marketingdigital.jpg'),
+
+(5, 1, 'Diseño Gráfico de Cero a Experto', 
+'Aprende los fundamentos del diseño gráfico, desde teoría del color y tipografía, con herramientas como Photoshop y más.', 
 120, 25, '../img/disenoGrafico');
 
 INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, nivel, presupuesto, modalidad, nombre_empresa, fecha) VALUES

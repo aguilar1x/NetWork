@@ -8,6 +8,7 @@ a los usuarios explorar y buscar contenido educativo
 */
 
 require_once 'app/models/user.php';
+require_once 'app/config/db.php';
 
 // Verificar si el usuario está logueado
 if (!User::isLoggedIn()) {
@@ -17,9 +18,158 @@ if (!User::isLoggedIn()) {
 
 // Obtener información del usuario actual
 $currentUser = User::getCurrentUser();
+$es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar y eliminar
+
+// Procesar las acciones del formulario (crear, editar, eliminar)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $accion = $_POST['accion'] ?? '';
+    $entidad = $_POST['entidad'] ?? ''; // categoria o curso
+
+    // -------- CRUD CATEGORIAS --------
+    if ($entidad === 'categoria' && $es_admin) {
+        // CREAR CATEGORIA (solo administradores)
+        if ($accion === 'crear') {
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+
+            // Validar que todos los campos estén llenos
+            if (!empty($nombre) && !empty($descripcion)) {
+                // Insertar la categoria en la base de datos
+                $stmt = $conn->prepare("INSERT INTO categoria (id_estado, nombre, descripcion) VALUES (1, ?, ?)");
+                $stmt->bind_param("ss", $nombre, $descripcion);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Categoría creada exitosamente';
+                } else {
+                    $error = 'Error al crear la categoría';
+                }
+            } else {
+                $error = 'Complete todos los campos';
+            }
+        }
+
+        // EDITAR CATEGORIA EXISTENTE (solo administradores)
+        if ($accion === 'editar') {
+            $id = $_POST['id'] ?? '';
+            $estado = $_POST['id_estado'] ?? '';
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+
+            // Validar que todos los campos estén llenos
+            if (
+                !empty($id) && !empty($estado) && !empty($nombre) && !empty($descripcion)) {
+                // Actualizar la categoria en la base de datos
+                $stmt = $conn->prepare("UPDATE categoria SET id_estado = ?, nombre = ?, descripcion = ? WHERE id = ?");
+                $stmt->bind_param("issi", $estado, $nombre, $descripcion, $id);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Categoría actualizada exitosamente';
+                } else {
+                    $error = 'Error al actualizar la categoría';
+                }
+            }
+        }
+
+        // ELIMINAR CATEGORIA (solo administradores)
+        if ($accion === 'eliminar') {
+            $id = $_POST['id'] ?? '';
+            if (!empty($id)) {
+                // Eliminar la categoria de la base de datos
+                $stmt = $conn->prepare("DELETE FROM categoria WHERE id = ?");
+                $stmt->bind_param("i", $id);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Categoría eliminada exitosamente';
+                } else {
+                    $error = 'Error al eliminar la categoría';
+                }
+            }
+        }
+    }
+
+    // -------- CRUD CURSOS --------
+    if ($entidad === 'curso' && $es_admin) {
+        // CREAR NUEVO CURSO (solo administradores)
+        if ($accion === 'crear') {
+            $categoria = $_POST['id_categoria'] ?? '';
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+            $precio = $_POST['precio'] ?? '';
+            $tiempo = $_POST['tiempo_horas'] ?? '';
+            $imagen = $_POST['imagen'] ?? '';
+
+            // Validar que todos los campos estén llenos
+            if (!empty($categoria) && !empty($nombre) && !empty($descripcion) && !empty($precio) && !empty($tiempo) && !empty($imagen)) {
+                // Insertar la cita en la base de datos
+                $stmt = $conn->prepare("INSERT INTO curso (id_categoria, id_estado, nombre, descripcion, precio, tiempo_horas, imagen) 
+            VALUES (?, 1, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("issdis", $categoria, $nombre, $descripcion, $precio, $tiempo, $imagen);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Curso creado exitosamente';
+                } else {
+                    $error = 'Error al crear el curso';
+                }
+            } else {
+                $error = 'Complete todos los campos';
+            }
+        }
+
+        // EDITAR CURSO EXISTENTE (solo administradores)
+        if ($accion === 'editar') {
+            $id = $_POST['id'] ?? '';
+            $categoria = $_POST['id_categoria'] ?? '';
+            $estado = $_POST['id_estado'] ?? '';
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+            $precio = $_POST['precio'] ?? '';
+            $tiempo = $_POST['tiempo_horas'] ?? '';
+            $imagen = $_POST['imagen'] ?? '';
+
+            // Validar que todos los campos estén llenos
+            if (
+                !empty($id) && !empty($categoria) && !empty($estado) && !empty($nombre) && !empty($descripcion) && !empty($precio)
+                && !empty($tiempo) && !empty($imagen)) {
+                // Actualizar el curso en la base de datos
+                $stmt = $conn->prepare("UPDATE curso SET id_categoria = ?, id_estado = ?, nombre = ?, descripcion = ?, precio = ?, tiempo_horas = ?, imagen = ? WHERE id = ?");
+                $stmt->bind_param("iissdisi", $categoria, $estado, $nombre, $descripcion, $precio, $tiempo, $imagen, $id);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Curso actualizado exitosamente';
+                } else {
+                    $error = 'Error al actualizar el curso';
+                }
+            }
+        }
+
+        // ELIMINAR CURSO (solo administradores)
+        if ($accion === 'eliminar') {
+            $id = $_POST['id'] ?? '';
+            if (!empty($id)) {
+                // Eliminar la cita de la base de datos
+                $stmt = $conn->prepare("DELETE FROM curso WHERE id = ?");
+                $stmt->bind_param("i", $id);
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Curso eliminado exitosamente';
+                } else {
+                    $error = 'Error al eliminar el curso';
+                }
+            }
+        }
+    }
+}
+
+// Obtener todas las categorias para mostrar
+$result = $conn->query("SELECT * FROM categoria");
+$categorias = $result->fetch_all(MYSQLI_ASSOC);
+
+// Obtener todas los cursos para mostrar
+$result = $conn->query("SELECT * FROM curso");
+$cursos = $result->fetch_all(MYSQLI_ASSOC);
 
 // Datos estáticos hasta tener la db hecha
-$cursos = [
+/*$cursos = [
     [
         'id' => 1,
         'titulo' => 'React desde Cero a Experto',
@@ -56,7 +206,7 @@ $cursos = [
         'progreso' => '85',
         'descripcion' => 'Estrategias actualizadas de marketing digital y growth hacking.'
     ]
-];
+];*/
 
 // Filtros de búsqueda
 $categoria_filtro = $_GET['categoria'] ?? '';
@@ -102,6 +252,29 @@ $busqueda = $_GET['busqueda'] ?? '';
 
         <!-- Categorías -->
         <section class="learn-categories">
+            <div class="container">
+                <h2 class="text-center h1 mb-5">Rutas de aprendizaje</h2>
+                <div class="row g-4">
+                    <?php foreach ($categorias as $categoria): ?>
+                        <div class="col-md-6 col-lg-3">
+                            <div class="learn-category-card h-100">
+                                <i class="bi bi-code-square learn-category-icon"></i>
+                                <h3 class="h4 mb-3"><?php echo htmlspecialchars($categoria['nombre']); ?></h3>
+                                <p class="mb-4 text-muted"><?php echo htmlspecialchars($categoria['descripcion']); ?></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="?categoria=desarrollo-web" class="text-decoration-none">
+                                        <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías -->
+        <!-- <section class="learn-categories">
             <div class="container">
                 <h2 class="text-center h1 mb-5">Rutas de aprendizaje</h2>
                 <div class="row g-4">
@@ -159,7 +332,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- Cursos -->
         <section class="learn-courses">
@@ -184,32 +357,28 @@ $busqueda = $_GET['busqueda'] ?? '';
 
                 <div class="row g-4" id="coursesContainer">
                     <?php foreach ($cursos as $curso): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="learn-course-card">
-                            <div class="learn-course-image">
-                                <img src="<?php echo htmlspecialchars($curso['imagen']); ?>" alt="<?php echo htmlspecialchars($curso['titulo']); ?>">
-                                <span class="learn-course-badge"><?php echo htmlspecialchars($curso['categoria']); ?></span>
-                            </div>
-                            <div class="learn-course-content">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['duracion']); ?></span>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-star-fill text-warning me-1"></i>
-                                        <span><?php echo htmlspecialchars($curso['rating']); ?> (<?php echo htmlspecialchars($curso['estudiantes']); ?>)</span>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="learn-course-card">
+                                <div class="learn-course-image">
+                                    <img src="<?php echo htmlspecialchars($curso['imagen']); ?>" alt="<?php echo htmlspecialchars($curso['nombre']); ?>">
+                                    <span class="learn-course-badge"><?php echo htmlspecialchars($curso['id_categoria']); ?></span>
+                                </div>
+                                <div class="learn-course-content">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?></span>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-star-fill text-warning me-1"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <h5 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h5>
-                                <p class="text-muted mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
-                                <div class="learn-course-progress mb-4">
-                                    <div class="learn-course-progress-bar" style="width: <?php echo htmlspecialchars($curso['progreso']); ?>%"></div>
-                                </div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 mb-0"><?php echo htmlspecialchars($curso['precio']); ?></span>
-                                    <button class="learn-btn-outline" data-bs-toggle="modal" data-bs-target="#courseModal<?php echo $curso['id']; ?>">Ver más</button>
+                                    <h5 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h5>
+                                    <p class="text-muted mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0"><?php echo htmlspecialchars($curso['precio']); ?></span>
+                                        <button class="learn-btn-outline" data-bs-toggle="modal" data-bs-target="#courseModal<?php echo $curso['id']; ?>">Ver más</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 </div>
             </div>
@@ -247,54 +416,54 @@ $busqueda = $_GET['busqueda'] ?? '';
 
         <!-- Modales de cursos -->
         <?php foreach ($cursos as $curso): ?>
-        <div class="modal fade learn-modal" id="courseModal<?php echo $curso['id']; ?>" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
-                            <i class="bi bi-x"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['categoria']); ?></span>
-                                <h3 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h3>
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="me-4">
-                                        <i class="bi bi-star-fill text-warning me-1"></i>
-                                        <span><?php echo htmlspecialchars($curso['rating']); ?></span>
+            <div class="modal fade learn-modal" id="courseModal<?php echo $curso['id']; ?>" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['categoria']); ?></span>
+                                    <h3 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h3>
+                                    <div class="d-flex align-items-center mb-4">
+                                        <div class="me-4">
+                                            <i class="bi bi-star-fill text-warning me-1"></i>
+                                            <span><?php echo htmlspecialchars($curso['rating']); ?></span>
+                                        </div>
+                                        <span class="text-muted"><?php echo htmlspecialchars($curso['estudiantes']); ?> estudiantes</span>
                                     </div>
-                                    <span class="text-muted"><?php echo htmlspecialchars($curso['estudiantes']); ?> estudiantes</span>
-                                </div>
-                                <p class="mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?> Este curso te llevará desde los conceptos básicos hasta técnicas avanzadas.</p>
-                                
-                                <h5 class="mb-3">Lo que aprenderás</h5>
-                                <ul class="learn-feature-list list-unstyled">
-                                    <li><i class="bi bi-check2-circle"></i>Fundamentos y conceptos básicos</li>
-                                    <li><i class="bi bi-check2-circle"></i>Técnicas avanzadas y mejores prácticas</li>
-                                    <li><i class="bi bi-check2-circle"></i>Proyectos prácticos y casos reales</li>
-                                    <li><i class="bi bi-check2-circle"></i>Certificación al completar el curso</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="learn-price-card">
-                                    <h4 class="mb-4"><?php echo htmlspecialchars($curso['precio']); ?></h4>
-                                    <ul class="list-unstyled mb-4">
-                                        <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['duracion']); ?> de video</li>
-                                        <li class="mb-3"><i class="bi bi-file-text me-2"></i>5 proyectos prácticos</li>
-                                        <li class="mb-3"><i class="bi bi-infinity me-2"></i>Acceso de por vida</li>
-                                        <li class="mb-3"><i class="bi bi-award me-2"></i>Certificado</li>
+                                    <p class="mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?> Este curso te llevará desde los conceptos básicos hasta técnicas avanzadas.</p>
+
+                                    <h5 class="mb-3">Lo que aprenderás</h5>
+                                    <ul class="learn-feature-list list-unstyled">
+                                        <li><i class="bi bi-check2-circle"></i>Fundamentos y conceptos básicos</li>
+                                        <li><i class="bi bi-check2-circle"></i>Técnicas avanzadas y mejores prácticas</li>
+                                        <li><i class="bi bi-check2-circle"></i>Proyectos prácticos y casos reales</li>
+                                        <li><i class="bi bi-check2-circle"></i>Certificación al completar el curso</li>
                                     </ul>
-                                    <button class="learn-btn-primary w-100 mb-2" onclick="enrollCourse(<?php echo $curso['id']; ?>)">Inscribirme ahora</button>
-                                    <button class="learn-btn-outline w-100" onclick="addToCart(<?php echo $curso['id']; ?>)">Añadir al carrito</button>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="learn-price-card">
+                                        <h4 class="mb-4"><?php echo htmlspecialchars($curso['precio']); ?></h4>
+                                        <ul class="list-unstyled mb-4">
+                                            <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['duracion']); ?> de video</li>
+                                            <li class="mb-3"><i class="bi bi-file-text me-2"></i>5 proyectos prácticos</li>
+                                            <li class="mb-3"><i class="bi bi-infinity me-2"></i>Acceso de por vida</li>
+                                            <li class="mb-3"><i class="bi bi-award me-2"></i>Certificado</li>
+                                        </ul>
+                                        <button class="learn-btn-primary w-100 mb-2" onclick="enrollCourse(<?php echo $curso['id']; ?>)">Inscribirme ahora</button>
+                                        <button class="learn-btn-outline w-100" onclick="addToCart(<?php echo $curso['id']; ?>)">Añadir al carrito</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
     </main>
 
