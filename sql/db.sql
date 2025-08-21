@@ -16,7 +16,9 @@ CREATE TABLE categoria (
 
 CREATE TABLE rol (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) 
+    id_estado INT NOT NULL,
+    nombre VARCHAR(100),
+    FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
 
 CREATE TABLE usuarios (
@@ -43,6 +45,7 @@ CREATE TABLE evento (
 
 CREATE TABLE profesional (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    id_estado INT NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     profesion VARCHAR(50),
     empresa VARCHAR(100),
@@ -52,18 +55,7 @@ CREATE TABLE profesional (
     avatar VARCHAR(255),
     descripcion TEXT,
     conexiones INT DEFAULT 0,
-    proyectos INT DEFAULT 0
-);
-
-
-CREATE TABLE reporte (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    id_usuario_reportar INT NOT NULL,
-    id_estado INT NOT NULL,
-    motivo VARCHAR(100),
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    FOREIGN KEY (id_usuario_reportar) REFERENCES usuarios(id),
+    proyectos INT DEFAULT 0,
     FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
 
@@ -113,8 +105,8 @@ INSERT INTO categoria (id_estado, nombre, descripcion) VALUES
 (1, 'Diseño Gráfico', 'Creación de logotipos, ilustraciones y material visual.'), 
 (1, 'Escritura', 'Redacción, corrección y creación de contenido.');
 
-INSERT INTO rol (nombre) VALUES
-('Admin'), ('Usuario');
+INSERT INTO rol (id_estado, nombre) VALUES
+(1, 'Admin'), (1, 'Usuario');
 
 INSERT INTO usuarios (id_estado, id_rol, nombre, correo, usuario, contrasena) VALUES
 (1, 2, 'Usuario NetWork', 'usuario@network.com', 'usuario',
@@ -128,12 +120,12 @@ INSERT INTO evento (id_estado, nombre, descripcion, fecha_hora, ubicacion) VALUE
 'Aprende a detectar problemas de usabilidad y rediseñar interfaces móviles de forma práctica.',
 '2025-09-12 10:00:00', 'Ciudad de México, México');
 
-INSERT INTO profesional (nombre, profesion, empresa, ubicacion, experiencia, skills, avatar, descripcion, conexiones, proyectos)
+INSERT INTO profesional (id_estado, nombre, profesion, empresa, ubicacion, experiencia, skills, avatar, descripcion, conexiones, proyectos)
 VALUES 
-('Ana García', 'Desarrolladora Frontend', 'Tech Solutions', 'Madrid, España', '5 años', 'React,JavaScript,CSS,HTML', 'img/avatar.jpg', 'Desarrolladora Frontend especializada en React y tecnologías modernas.', 150, 23),
-('Carlos Ruiz', 'Diseñador UX/UI', 'Design Studio', 'Barcelona, España', '3 años', 'Figma,Adobe XD,Prototyping,User Research', 'img/avatar.jpg', 'Diseñador UX/UI con pasión por crear experiencias digitales excepcionales.', 89, 15),
-('Laura Fernández', 'Marketing Digital Manager', 'Growth Agency', 'Valencia, España', '7 años', 'SEM,SEO,Analytics,Content Strategy', 'img/avatar.jpg', 'Experta en marketing digital con enfoque en growth hacking y estrategia.', 245, 42),
-('Miguel Torres', 'Full Stack Developer', 'Startup Inc.', 'Sevilla, España', '4 años', 'Node.js,Python,MongoDB,AWS', 'img/avatar.jpg', 'Desarrollador Full Stack con experiencia en arquitecturas escalables.', 120, 18);
+(1, 'Ana García', 'Desarrolladora Frontend', 'Tech Solutions', 'Madrid, España', '5 años', 'React,JavaScript,CSS,HTML', 'img/avatar.jpg', 'Desarrolladora Frontend especializada en React y tecnologías modernas.', 150, 23),
+(1, 'Carlos Ruiz', 'Diseñador UX/UI', 'Design Studio', 'Barcelona, España', '3 años', 'Figma,Adobe XD,Prototyping,User Research', 'img/avatar.jpg', 'Diseñador UX/UI con pasión por crear experiencias digitales excepcionales.', 89, 15),
+(1, 'Laura Fernández', 'Marketing Digital Manager', 'Growth Agency', 'Valencia, España', '7 años', 'SEM,SEO,Analytics,Content Strategy', 'img/avatar.jpg', 'Experta en marketing digital con enfoque en growth hacking y estrategia.', 245, 42),
+(1, 'Miguel Torres', 'Full Stack Developer', 'Startup Inc.', 'Sevilla, España', '4 años', 'Node.js,Python,MongoDB,AWS', 'img/avatar.jpg', 'Desarrollador Full Stack con experiencia en arquitecturas escalables.', 120, 18);
 
 
 INSERT INTO reporte (id_usuario, id_usuario_reportar, id_estado, motivo) VALUES
