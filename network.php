@@ -8,6 +8,8 @@ con otros profesionales y hacer networking
 */
 
 require_once 'app/models/user.php';
+require_once 'app/config/db.php';
+
 
 // Verificar si el usuario está logueado
 if (!User::isLoggedIn()) {
@@ -19,94 +21,63 @@ if (!User::isLoggedIn()) {
 $currentUser = User::getCurrentUser();
 
 // Datos de ejemplo para perfiles profesionales (esto vendría de la base de datos)
-$profesionales = [
-    [
-        'id' => 1,
-        'nombre' => 'Ana García',
-        'profesion' => 'Desarrolladora Frontend',
-        'empresa' => 'Tech Solutions',
-        'ubicacion' => 'Madrid, España',
-        'experiencia' => '5 años',
-        'skills' => ['React', 'JavaScript', 'CSS', 'HTML'],
-        'avatar' => 'img/avatar.jpg',
-        'descripcion' => 'Desarrolladora Frontend especializada en React y tecnologías modernas.',
-        'conexiones' => 150,
-        'proyectos' => 23
-    ],
-    [
-        'id' => 2,
-        'nombre' => 'Carlos Ruiz',
-        'profesion' => 'Diseñador UX/UI',
-        'empresa' => 'Design Studio',
-        'ubicacion' => 'Barcelona, España',
-        'experiencia' => '3 años',
-        'skills' => ['Figma', 'Adobe XD', 'Prototyping', 'User Research'],
-        'avatar' => 'img/avatar.jpg',
-        'descripcion' => 'Diseñador UX/UI con pasión por crear experiencias digitales excepcionales.',
-        'conexiones' => 89,
-        'proyectos' => 15
-    ],
-    [
-        'id' => 3,
-        'nombre' => 'Laura Fernández',
-        'profesion' => 'Marketing Digital Manager',
-        'empresa' => 'Growth Agency',
-        'ubicacion' => 'Valencia, España',
-        'experiencia' => '7 años',
-        'skills' => ['SEM', 'SEO', 'Analytics', 'Content Strategy'],
-        'avatar' => 'img/avatar.jpg',
-        'descripcion' => 'Experta en marketing digital con enfoque en growth hacking y estrategia.',
-        'conexiones' => 245,
-        'proyectos' => 42
-    ],
-    [
-        'id' => 4,
-        'nombre' => 'Miguel Torres',
-        'profesion' => 'Full Stack Developer',
-        'empresa' => 'Startup Inc.',
-        'ubicacion' => 'Sevilla, España',
-        'experiencia' => '4 años',
-        'skills' => ['Node.js', 'Python', 'MongoDB', 'AWS'],
-        'avatar' => 'img/avatar.jpg',
-        'descripcion' => 'Desarrollador Full Stack con experiencia en arquitecturas escalables.',
-        'conexiones' => 120,
-        'proyectos' => 18
-    ]
-];
+// Filtros de búsqueda
+$busqueda = $_GET['busqueda'] ?? '';
+$profesion_filtro = $_GET['profesion'] ?? '';
+$ubicacion_filtro = $_GET['ubicacion'] ?? '';
 
-// Eventos de networking próximos
-$eventos = [
-    [
-        'id' => 1,
-        'titulo' => 'Tech Meetup Madrid',
-        'fecha' => '2024-02-15',
-        'hora' => '19:00',
-        'ubicacion' => 'Madrid, España',
-        'tipo' => 'Presencial',
-        'asistentes' => 45,
-        'descripcion' => 'Encuentro mensual de profesionales tech en Madrid.'
-    ],
-    [
-        'id' => 2,
-        'titulo' => 'Webinar: Future of UX Design',
-        'fecha' => '2024-02-20',
-        'hora' => '18:30',
-        'ubicacion' => 'Online',
-        'tipo' => 'Virtual',
-        'asistentes' => 120,
-        'descripcion' => 'Discusión sobre las tendencias futuras en diseño UX.'
-    ],
-    [
-        'id' => 3,
-        'titulo' => 'Startup Networking Barcelona',
-        'fecha' => '2024-02-25',
-        'hora' => '20:00',
-        'ubicacion' => 'Barcelona, España',
-        'tipo' => 'Presencial',
-        'asistentes' => 67,
-        'descripcion' => 'Networking para emprendedores y profesionales de startups.'
-    ]
-];
+// Construir query dinámico
+$query = "SELECT * FROM profesional WHERE 1=1";
+
+if (!empty($busqueda)) {
+    $query .= " AND (nombre LIKE ? OR descripcion LIKE ?)";
+}
+if (!empty($profesion_filtro)) {
+    $query .= " AND profesion LIKE ?";
+}
+if (!empty($ubicacion_filtro)) {
+    $query .= " AND ubicacion LIKE ?";
+}
+
+$stmt = $conn->prepare($query);
+
+$paramTypes = '';
+$params = [];
+
+if (!empty($busqueda)) {
+    $paramTypes .= 'ss';
+    $busquedaParam = "%$busqueda%";
+    $params[] = &$busquedaParam;
+    $params[] = &$busquedaParam;
+}
+if (!empty($profesion_filtro)) {
+    $paramTypes .= 's';
+    $profesionParam = "%$profesion_filtro%";
+    $params[] = &$profesionParam;
+}
+if (!empty($ubicacion_filtro)) {
+    $paramTypes .= 's';
+    $ubicacionParam = "%$ubicacion_filtro%";
+    $params[] = &$ubicacionParam;
+}
+
+// Vincular parámetros si hay
+if ($paramTypes) {
+    $stmt->bind_param($paramTypes, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+$profesionales = $result->fetch_all(MYSQLI_ASSOC);
+
+
+// Eventos de networking desde la DB
+$queryEventos = "SELECT * FROM evento ORDER BY fecha_hora ASC";
+$stmtEventos = $conn->prepare($queryEventos);
+$stmtEventos->execute();
+$resultEventos = $stmtEventos->get_result();
+$eventos = $resultEventos->fetch_all(MYSQLI_ASSOC);
+
 
 // Procesar búsqueda
 $busqueda = $_GET['busqueda'] ?? '';
