@@ -1,5 +1,15 @@
 <?php
-session_start();
+
+require_once 'app/models/user.php';
+
+if (!User::isLoggedIn()) {
+    header('Location: login.php');
+    exit();
+}
+
+// Obtener información del usuario actual
+$currentUser = User::getCurrentUser();
+$es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar y eliminar
 
 // Inicializar carrito si no existe
 if (!isset($_SESSION['carrito'])) {
@@ -32,6 +42,8 @@ foreach ($_SESSION['carrito'] as $id => $item) {
     <title>Carrito - NetWork</title>
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
