@@ -44,8 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
             // Insertar la oferta en la base de datos
             $stmt = $conn->prepare("INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES 
                 (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssssssi", $nombre, $descripcion, $requisitos, $beneficios, $nivel, 
-            $modalidad, $publicado_por, $fecha, $presupuesto);
+            $stmt->bind_param(
+                "ssssssssi",
+                $nombre,
+                $descripcion,
+                $requisitos,
+                $beneficios,
+                $nivel,
+                $modalidad,
+                $publicado_por,
+                $fecha,
+                $presupuesto
+            );
 
             if ($stmt->execute()) {
                 $mensaje = 'Oferta publicada exitosamente';
@@ -54,6 +64,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
             }
         } else {
             $error = 'Complete todos los campos';
+        }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // EDITAR OFERTA EXISTENTE (solo administradores)
+    if ($accion === 'editar') {
+        $id = $_POST['id'] ?? '';
+        $categoria = $_POST['id_categoria'] ?? '';
+        $estado = $_POST['id_estado'] ?? '';
+        $nombre = $_POST['nombre'] ?? '';
+        $descripcion = $_POST['descripcion'] ?? '';
+        $requisitos = $_POST['requisitos'] ?? '';
+        $beneficios = $_POST['beneficios'] ?? '';
+        $nivel = $_POST['nivel'] ?? '';
+        $modalidad = $_POST['modalidad'] ?? '';
+        $publicado_por = $_POST['publicado_por'] ?? '';
+        $fecha = $_POST['fecha'] ?? '';
+        $presupuesto = $_POST['presupuesto'] ?? '';
+
+        // Validar que todos los campos estén llenos
+        if (
+            !empty($id) && !empty($categoria) && !empty($estado) && !empty($nombre) && !empty($descripcion) 
+            && !empty($requisitos) && !empty($beneficios) && !empty($nivel) && !empty($modalidad) 
+            && !empty($publicado_por) && !empty($fecha) && !empty($presupuesto)
+        ) {
+            // Actualizar la oferta en la base de datos
+            $stmt = $conn->prepare("UPDATE oferta SET id_categoria = ?, id_estado = ?, nombre = ?, descripcion = ?, requisitos = ?, beneficios = ?, nivel = ?, modalidad = ?, publicado_por = ?, fecha = ?, presupuesto = ? WHERE id = ?");
+            $stmt->bind_param("iissssssssii", $categoria, $estado, $nombre, $descripcion, $requisitos, 
+            $beneficios, $nivel, $modalidad, $publicado_por, $fecha, $presupuesto, $id);
+
+            if ($stmt->execute()) {
+                $mensaje = 'Oferta actualizada exitosamente';
+            } else {
+                $error = 'Error al actualizar la oferta';
+            }
+        }
+    }
+
+    // ELIMINAR CATEGORIA (solo administradores)
+    if ($accion === 'eliminar') {
+        $id = $_POST['id'] ?? '';
+        if (!empty($id)) {
+            // Eliminar la oferta de la base de datos
+            $stmt = $conn->prepare("DELETE FROM oferta WHERE id = ?");
+            $stmt->bind_param("i", $id);
+
+            if ($stmt->execute()) {
+                $mensaje = 'Oferta eliminada exitosamente';
+            } else {
+                $error = 'Error al eliminar la oferta';
+            }
         }
     }
 }
@@ -221,7 +283,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                         <div class="col-lg-8">
                             <div class="d-flex align-items-center mb-2">
                                 <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['nombre']); ?></h5>
-                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['id_categoria']); ?></span>
                             </div>
                             <p class="text-muted mb-3"><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
                             <div class="row">
@@ -334,7 +396,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                     <div class="modal-body">
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['id_categoria']); ?></span>
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <span class="price-highlight">$<?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
