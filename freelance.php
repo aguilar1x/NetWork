@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
     }
 }
 
-// Obtener todas las categorias para mostrar
-$result = $conn->query("SELECT * FROM oferta");
-$ofertas = $result->fetch_all(MYSQLI_ASSOC);
+// Obtener ofertas con nombre de categoría
+$result = $conn->query("SELECT o.*, c.nombre AS categoria FROM oferta o LEFT JOIN categoria c ON c.id = o.id_categoria");
+$ofertas = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
 // Datos de ejemplo para ofertas (esto vendría de la base de datos)
 /*$ofertas = [
