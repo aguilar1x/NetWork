@@ -9,7 +9,7 @@ Este archivo maneja todo lo relacionado con los usuarios:
 - Obtener información del usuario actual
 */
 
-require_once 'app/config/db.php';
+require_once __DIR__ . '/../config/db.php';
 
 class User {
     private $db;
@@ -33,7 +33,7 @@ class User {
             $_SESSION['user_id'] = $result['id'];
             $_SESSION['nombre'] = $result['nombre'];
             $_SESSION['usuario'] = $result['usuario'];
-            $_SESSION['rol'] = $result['rol'];
+            $_SESSION['rol'] = $result['id_rol'];
             
             return true;
         }

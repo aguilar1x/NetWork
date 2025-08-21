@@ -18,7 +18,19 @@ if (!User::isLoggedIn()) {
 
 // Obtener información del usuario actual
 $currentUser = User::getCurrentUser();
-$es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar y eliminar
+$es_admin = false;
+if (!empty($currentUser['id'])) {
+    $stmt = $conn->prepare("SELECT id_rol FROM usuarios WHERE id = ?");
+    $stmt->bind_param('i', $currentUser['id']);
+    if ($stmt->execute()) {
+        $row = $stmt->get_result()->fetch_assoc();
+        $es_admin = ((int)($row['id_rol'] ?? 0) === 1);
+    }
+}
+// Fallback por si la sesión ya tiene el rol correcto
+if (!$es_admin) {
+    $es_admin = ((int)($currentUser['rol'] ?? 0) === 1);
+}
 
 // Procesar las acciones del formulario (crear, editar, eliminar)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -172,6 +184,13 @@ $result = $conn->query("
 ");
 $cursos = $result->fetch_all(MYSQLI_ASSOC);
 
+// Estados (para panel admin)
+$estados = [];
+$resEstados = $conn->query("SELECT id, tipo_estado FROM estado");
+if ($resEstados) {
+    $estados = $resEstados->fetch_all(MYSQLI_ASSOC);
+}
+
 // Datos estáticos hasta tener la db hecha
 /*$cursos = [
     [
@@ -233,6 +252,16 @@ $busqueda = $_GET['busqueda'] ?? '';
     <header></header>
 
     <main>
+        <?php if (!empty($mensaje) || !empty($error)): ?>
+            <div class="container mt-3">
+                <?php if (!empty($mensaje)): ?>
+                    <div class="alert alert-success py-2 mb-3"><?php echo htmlspecialchars($mensaje); ?></div>
+                <?php endif; ?>
+                <?php if (!empty($error)): ?>
+                    <div class="alert alert-danger py-2 mb-3"><?php echo htmlspecialchars($error); ?></div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
         <!-- Hero Section -->
         <section class="learn-hero">
             <div class="container learn-content">
@@ -253,6 +282,8 @@ $busqueda = $_GET['busqueda'] ?? '';
                 </div>
             </div>
         </section>
+
+        
 
         <!-- Categorías -->
         <section class="learn-categories">
@@ -344,17 +375,23 @@ $busqueda = $_GET['busqueda'] ?? '';
                 <div class="d-flex justify-content-between align-items-center mb-5">
                     <h2 class="h1">Cursos destacados</h2>
                     <div class="d-flex gap-3">
-                        <select class="learn-search" style="width: auto" onchange="filterCourses(this)">
-                            <option value="">Nivel</option>
-                            <option>Principiante</option>
-                            <option>Intermedio</option>
-                            <option>Avanzado</option>
+                        <?php if ($es_admin): ?>
+                        <a class="btn btn-admin" href="admin-cursos.php">
+                            <i class="bi bi-gear me-1"></i>
+                            <span>Panel administrativo</span>
+                        </a>
+                        <?php endif; ?>
+                        <select id="categoriaFilter" class="learn-search" style="width: auto" onchange="filterCourses()">
+                            <option value="">Categoría</option>
+                            <?php foreach ($categorias as $cat): ?>
+                                <option value="<?php echo htmlspecialchars($cat['nombre']); ?>"><?php echo htmlspecialchars($cat['nombre']); ?></option>
+                            <?php endforeach; ?>
                         </select>
-                        <select class="learn-search" style="width: auto" onchange="filterCourses(this)">
+                        <select id="duracionFilter" class="learn-search" style="width: auto" onchange="filterCourses()">
                             <option value="">Duración</option>
-                            <option>Corto (0-5h)</option>
-                            <option>Medio (5-10h)</option>
-                            <option>Largo (10h+)</option>
+                            <option value="corto">Corto (0-5h)</option>
+                            <option value="medio">Medio (5-10h)</option>
+                            <option value="largo">Largo (10h+)</option>
                         </select>
                     </div>
                 </div>
@@ -362,7 +399,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                 <div class="row g-4" id="coursesContainer">
                     <?php foreach ($cursos as $curso): ?>
                         <div class="col-md-6 col-lg-4">
-                            <div class="learn-course-card">
+                            <div class="learn-course-card" data-horas="<?php echo (int)$curso['tiempo_horas']; ?>" data-categoria="<?php echo htmlspecialchars($curso['nombre_categoria'] ?? ''); ?>">
                                 <div class="learn-course-image">
                                     <img src="<?php echo htmlspecialchars($curso['imagen']); ?>" alt="<?php echo htmlspecialchars($curso['nombre_categoria'] ?? $curso['nombre']); ?>">
                                     <span class="learn-course-badge"><?php echo htmlspecialchars($curso['nombre_categoria'] ?? 'Sin categoría'); ?></span>
@@ -432,13 +469,13 @@ $busqueda = $_GET['busqueda'] ?? '';
                             <div class="row">
                                 <div class="col-lg-8">
                                     <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['nombre_categoria'] ?? 'Sin categoría'); ?></span>
-                                    <h3 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h3>
+                                    <h3 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h3>
                                     <div class="d-flex align-items-center mb-4">
                                         <div class="me-4">
                                             <i class="bi bi-star-fill text-warning me-1"></i>
-                                            <span><?php echo htmlspecialchars($curso['rating']); ?></span>
+                                            <span><?php echo htmlspecialchars($curso['rating'] ?? ''); ?></span>
                                         </div>
-                                        <span class="text-muted"><?php echo htmlspecialchars($curso['estudiantes']); ?> estudiantes</span>
+                                        <span class="text-muted"><?php echo htmlspecialchars($curso['estudiantes'] ?? ''); ?> Estudiantes</span>
                                     </div>
                                     <p class="mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?> Este curso te llevará desde los conceptos básicos hasta técnicas avanzadas.</p>
 
@@ -452,15 +489,26 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="learn-price-card">
-                                        <h4 class="mb-4"><?php echo htmlspecialchars($curso['precio']); ?></h4>
+                                        <h4 class="mb-4">$<?php echo htmlspecialchars($curso['precio']); ?></h4>
                                         <ul class="list-unstyled mb-4">
-                                            <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['duracion']); ?> de video</li>
+                                            <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?> horas de video</li>
                                             <li class="mb-3"><i class="bi bi-file-text me-2"></i>5 proyectos prácticos</li>
                                             <li class="mb-3"><i class="bi bi-infinity me-2"></i>Acceso de por vida</li>
                                             <li class="mb-3"><i class="bi bi-award me-2"></i>Certificado</li>
                                         </ul>
                                         <button class="learn-btn-primary w-100 mb-2" onclick="enrollCourse(<?php echo $curso['id']; ?>)">Inscribirme ahora</button>
                                         <button class="learn-btn-outline w-100" onclick="addToCart(<?php echo $curso['id']; ?>)">Añadir al carrito</button>
+                                        <?php if ($es_admin): ?>
+                                        <div class="mt-3 d-grid gap-2">
+                                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editCourseModal<?php echo $curso['id']; ?>"><i class="bi bi-pencil"></i> Editar</button>
+                                            <form method="POST" onsubmit="return confirm('¿Eliminar este curso?');">
+                                                <input type="hidden" name="entidad" value="curso">
+                                                <input type="hidden" name="accion" value="eliminar">
+                                                <input type="hidden" name="id" value="<?php echo (int)$curso['id']; ?>">
+                                                <button class="btn btn-danger btn-sm w-100" type="submit"><i class="bi bi-trash"></i> Eliminar</button>
+                                            </form>
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -468,7 +516,122 @@ $busqueda = $_GET['busqueda'] ?? '';
                     </div>
                 </div>
             </div>
+            <?php if ($es_admin): ?>
+            <!-- Modal editar curso (admin) -->
+            <div class="modal fade" id="editCourseModal<?php echo $curso['id']; ?>" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar curso</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                <input type="hidden" name="entidad" value="curso">
+                                <input type="hidden" name="accion" value="editar">
+                                <input type="hidden" name="id" value="<?php echo (int)$curso['id']; ?>">
+                                <div class="mb-2">
+                                    <label class="form-label">Categoría</label>
+                                    <select class="form-select" name="id_categoria" required>
+                                        <?php foreach ($categorias as $cat): ?>
+                                            <option value="<?php echo (int)$cat['id']; ?>" <?php echo ((int)$cat['id'] === (int)$curso['id_categoria']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($cat['nombre']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select" name="id_estado" required>
+                                        <?php foreach ($estados as $e): ?>
+                                            <option value="<?php echo (int)$e['id']; ?>" <?php echo ((int)$e['id'] === (int)$curso['id_estado']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($e['tipo_estado']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Nombre</label>
+                                    <input class="form-control" name="nombre" value="<?php echo htmlspecialchars($curso['nombre']); ?>" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Descripción</label>
+                                    <textarea class="form-control" name="descripcion" rows="3" required><?php echo htmlspecialchars($curso['descripcion']); ?></textarea>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <label class="form-label">Precio</label>
+                                        <input class="form-control" type="number" step="0.01" name="precio" value="<?php echo htmlspecialchars($curso['precio']); ?>" required>
+                                    </div>
+                                    <div class="col">
+                                        <label class="form-label">Horas</label>
+                                        <input class="form-control" type="number" name="tiempo_horas" value="<?php echo htmlspecialchars($curso['tiempo_horas']); ?>" required>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Imagen (URL)</label>
+                                    <input class="form-control" name="imagen" value="<?php echo htmlspecialchars($curso['imagen']); ?>" required>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-primary" type="submit">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         <?php endforeach; ?>
+        <?php if ($es_admin): ?>
+        <!-- Modal crear curso (admin) -->
+        <div class="modal fade" id="createCourseModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Crear nuevo curso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            <input type="hidden" name="entidad" value="curso">
+                            <input type="hidden" name="accion" value="crear">
+                            <div class="mb-2">
+                                <label class="form-label">Categoría</label>
+                                <select class="form-select" name="id_categoria" required>
+                                    <?php foreach ($categorias as $cat): ?>
+                                        <option value="<?php echo (int)$cat['id']; ?>"><?php echo htmlspecialchars($cat['nombre']); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Nombre</label>
+                                <input class="form-control" name="nombre" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" name="descripcion" rows="3" required></textarea>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <label class="form-label">Precio</label>
+                                    <input class="form-control" type="number" step="0.01" name="precio" required>
+                                </div>
+                                <div class="col">
+                                    <label class="form-label">Horas</label>
+                                    <input class="form-control" type="number" name="tiempo_horas" required>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Imagen (URL)</label>
+                                <input class="form-control" name="imagen" required>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                                <button class="btn btn-primary" type="submit">Crear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 
     <!-- Footer -->

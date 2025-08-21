@@ -8,6 +8,7 @@ del usuario autenticado
 */
 
 require_once 'app/models/user.php';
+require_once 'app/config/db.php';
 
 // Verificar si el usuario está logueado
 if (!User::isLoggedIn()) {
@@ -17,6 +18,21 @@ if (!User::isLoggedIn()) {
 
 // Obtener información del usuario actual
 $currentUser = User::getCurrentUser();
+
+// Cargar datos (usuarios + rol)
+$userRow = null;
+if ($currentUser && isset($currentUser['id'])) {
+    $stmt = $conn->prepare("SELECT u.nombre, u.usuario, u.correo, r.nombre AS rol_nombre FROM usuarios u LEFT JOIN rol r ON r.id = u.id_rol WHERE u.id = ?");
+    $stmt->bind_param('i', $currentUser['id']);
+    if ($stmt->execute()) {
+        $res = $stmt->get_result();
+        $userRow = $res->fetch_assoc();
+    }
+}
+
+$displayName = $userRow['nombre'] ?? ($currentUser['nombre'] ?? '');
+$displayRole = $userRow['rol_nombre'] ?? ($currentUser['rol'] ?? '');
+$initial = strtoupper(substr($displayName, 0, 1));
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +56,7 @@ $currentUser = User::getCurrentUser();
         </div>
     </section>
 
-    <div class="container">
+    <section class="container">
         <div class="layout-container">
             <aside class="sidebar info-section">
                 <i class="bi bi-gear settings-icon" role="button" data-bs-toggle="modal" data-bs-target="#settingsModal"></i>
@@ -54,19 +70,19 @@ $currentUser = User::getCurrentUser();
                 <section class="mt-4">
                     <div class="pb-3">
                         <label class="form-label fw-bold">Nombre Completo</label>
-                        <p id="nombreUsuario"><?php echo htmlspecialchars($currentUser['nombre']); ?></p>
+                        <p id="nombreUsuario"><?php echo htmlspecialchars($userRow['nombre'] ?? $currentUser['nombre'] ?? ''); ?></p>
                     </div>
                     <div class="pb-3">
                         <label class="form-label fw-bold">Usuario</label>
-                        <p id="usuarioLogin"><?php echo htmlspecialchars($currentUser['usuario']); ?></p>
+                        <p id="usuarioLogin"><?php echo htmlspecialchars($userRow['usuario'] ?? $currentUser['usuario'] ?? ''); ?></p>
                     </div>
                     <div class="pb-3">
                         <label class="form-label fw-bold">Rol</label>
-                        <p id="rolUsuario"><?php echo htmlspecialchars($currentUser['rol']); ?></p>
+                        <p id="rolUsuario"><?php echo htmlspecialchars($userRow['rol_nombre'] ?? ($currentUser['rol'] ?? '')); ?></p>
                     </div>
                     <div class="pb-3">
                         <label class="form-label fw-bold">Correo electrónico</label>
-                        <p id="correoUsuario">—</p>
+                        <p id="correoUsuario"><?php echo htmlspecialchars($userRow['correo'] ?? '—'); ?></p>
                     </div>
                     <div class="pb-3">
                         <label class="form-label fw-bold">Edad</label>
@@ -79,52 +95,65 @@ $currentUser = User::getCurrentUser();
                 </section>
             </aside>
 
-            <main class="flex-grow-1">
-                <section class="learn-hero">
-                    <div class="container learn-content text-center">
-                        <h2 class="h3 fw-bold mb-4">Configuración de Notificaciones</h2>
-                        <p class="lead mb-4">Personaliza cómo y cuándo recibes notificaciones</p>
-                    </div>
-                </section>
-
-                <div class="container mt-4">
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="learn-category-card">
-                                <h4 class="mb-3">Notificaciones por Email</h4>
-                                
-                                <div class="position-relative mb-3">
-                                    <p class="mb-1">Nuevos cursos disponibles</p>
-                                    <div class="form-check form-switch switch1">
-                                        <input class="form-check-input" type="checkbox" id="notifCursos" checked>
-                                    </div>
+            <main class="flex-grow-1 pb-5">
+                <div class="container mt-2">
+                    <div class="row g-4 align-items-stretch">
+                        <div class="col-md-7">
+                            <div class="learn-category-card h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="mb-0">Configuración de Notificaciones</h4>
+                                    <span class="text-muted small">Email</span>
                                 </div>
-
-                                <div class="position-relative mb-3">
-                                    <p class="mb-1">Ofertas de trabajo freelance</p>
-                                    <div class="form-check form-switch switch2">
-                                        <input class="form-check-input" type="checkbox" id="notifTrabajos" checked>
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex justify-content-between align-items-center border rounded-3 p-3">
+                                            <div>
+                                                <div class="fw-semibold">Nuevos cursos disponibles</div>
+                                                <div class="text-muted small">Resumen semanal</div>
+                                            </div>
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" id="notifCursos" checked>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="position-relative mb-3">
-                                    <p class="mb-1">Nuevas conexiones en la red</p>
-                                    <div class="form-check form-switch switch3">
-                                        <input class="form-check-input" type="checkbox" id="notifConexiones">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex justify-content-between align-items-center border rounded-3 p-3">
+                                            <div>
+                                                <div class="fw-semibold">Ofertas de trabajo freelance</div>
+                                                <div class="text-muted small">Propuestas relevantes</div>
+                                            </div>
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" id="notifTrabajos" checked>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="position-relative mb-3">
-                                    <p class="mb-1">Recordatorios de eventos</p>
-                                    <div class="form-check form-switch switch4">
-                                        <input class="form-check-input" type="checkbox" id="notifEventos" checked>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex justify-content-between align-items-center border rounded-3 p-3">
+                                            <div>
+                                                <div class="fw-semibold">Nuevas conexiones en la red</div>
+                                                <div class="text-muted small">Alertas de invitaciones</div>
+                                            </div>
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" id="notifConexiones">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex justify-content-between align-items-center border rounded-3 p-3">
+                                            <div>
+                                                <div class="fw-semibold">Recordatorios de eventos</div>
+                                                <div class="text-muted small">Antes de iniciar</div>
+                                            </div>
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" id="notifEventos" checked>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="learn-benefit-card">
+                        <div class="col-md-5">
+                            <div class="learn-benefit-card mb-4">
                                 <i class="bi bi-shield-check learn-benefit-icon"></i>
                                 <h4 class="mb-3">Seguridad</h4>
                                 <p class="text-muted mb-4">Tu cuenta está protegida con autenticación segura.</p>
@@ -132,9 +161,6 @@ $currentUser = User::getCurrentUser();
                                     Cambiar Contraseña
                                 </button>
                             </div>
-                        </div>
-
-                        <div class="col-md-6">
                             <div class="learn-benefit-card">
                                 <i class="bi bi-download learn-benefit-icon"></i>
                                 <h4 class="mb-3">Datos</h4>
@@ -148,7 +174,7 @@ $currentUser = User::getCurrentUser();
                 </div>
             </main>
         </div>
-    </div>
+    </section>
 
     <!-- Modal de Configuración -->
     <div class="modal fade" id="settingsModal" tabindex="-1">
@@ -230,35 +256,6 @@ $currentUser = User::getCurrentUser();
     <script src="./js/components/header.js"></script>
     <script src="./js/index.js"></script>
     <script src="./js/perfil.js"></script>
-    <script>
-        function guardarPerfil() {
-            // Aquí implementarías la lógica para guardar el perfil
-            alert('Perfil actualizado correctamente (Función a implementar)');
-            // Cerrar modal
-            bootstrap.Modal.getInstance(document.getElementById('settingsModal')).hide();
-        }
-
-        function cambiarContrasena() {
-            const current = document.getElementById('currentPassword').value;
-            const newPass = document.getElementById('newPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-
-            if (newPass !== confirm) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-
-            // Aquí implementarías la lógica para cambiar la contraseña
-            alert('Contraseña cambiada correctamente (Función a implementar)');
-            // Cerrar modal
-            bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
-        }
-
-        function descargarDatos() {
-            // Aquí implementarías la lógica para descargar datos
-            alert('Preparando descarga de datos... (Función a implementar)');
-        }
-    </script>
 </body>
 
 </html>
