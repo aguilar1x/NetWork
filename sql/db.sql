@@ -41,6 +41,21 @@ CREATE TABLE evento (
     FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
 
+CREATE TABLE profesional (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    profesion VARCHAR(50),
+    empresa VARCHAR(100),
+    ubicacion VARCHAR(100),
+    experiencia VARCHAR(50),
+    skills TEXT,
+    avatar VARCHAR(255),
+    descripcion TEXT,
+    conexiones INT DEFAULT 0,
+    proyectos INT DEFAULT 0
+);
+
+
 CREATE TABLE reporte (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
@@ -110,6 +125,14 @@ INSERT INTO evento (id_estado, nombre, descripcion, fecha_hora, ubicacion) VALUE
 (1, 'Rediseñando Experiencias: Taller de UX/UI para Apps Móviles',
 'Aprende a detectar problemas de usabilidad y rediseñar interfaces móviles de forma práctica.',
 '2025-09-12 10:00:00', 'Ciudad de México, México');
+
+INSERT INTO profesional (nombre, profesion, empresa, ubicacion, experiencia, skills, avatar, descripcion, conexiones, proyectos)
+VALUES 
+('Ana García', 'Desarrolladora Frontend', 'Tech Solutions', 'Madrid, España', '5 años', 'React,JavaScript,CSS,HTML', 'img/avatar.jpg', 'Desarrolladora Frontend especializada en React y tecnologías modernas.', 150, 23),
+('Carlos Ruiz', 'Diseñador UX/UI', 'Design Studio', 'Barcelona, España', '3 años', 'Figma,Adobe XD,Prototyping,User Research', 'img/avatar.jpg', 'Diseñador UX/UI con pasión por crear experiencias digitales excepcionales.', 89, 15),
+('Laura Fernández', 'Marketing Digital Manager', 'Growth Agency', 'Valencia, España', '7 años', 'SEM,SEO,Analytics,Content Strategy', 'img/avatar.jpg', 'Experta en marketing digital con enfoque en growth hacking y estrategia.', 245, 42),
+('Miguel Torres', 'Full Stack Developer', 'Startup Inc.', 'Sevilla, España', '4 años', 'Node.js,Python,MongoDB,AWS', 'img/avatar.jpg', 'Desarrollador Full Stack con experiencia en arquitecturas escalables.', 120, 18);
+
 
 INSERT INTO reporte (id_usuario, id_usuario_reportar, id_estado, motivo) VALUES
 (2, 1, 1, 'Publicación de oferta laboral falsa.');
