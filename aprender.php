@@ -296,11 +296,6 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 <i class="bi bi-code-square learn-category-icon"></i>
                                 <h3 class="h4 mb-3"><?php echo htmlspecialchars($categoria['nombre']); ?></h3>
                                 <p class="mb-4 text-muted"><?php echo htmlspecialchars($categoria['descripcion']); ?></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a href="?categoria=desarrollo-web" class="text-decoration-none">
-                                        <i class="bi bi-arrow-right"></i>
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -407,9 +402,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 <div class="learn-course-content">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?> horas</span>
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-star-fill text-warning me-1"></i>
-                                        </div>
+
                                     </div>
                                     <h5 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h5>
                                     <p class="text-muted mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
