@@ -23,20 +23,44 @@ $es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar 
 // Procesar formulario de nueva oferta
 $mensaje = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
-    // Logica futura para publicar oferta en la base de datos
-    $mensaje = 'Oferta publicada exitosamente';
 
     // CREAR OFERTA (solo administradores)
     if ($es_admin) {
         $nombre = $_POST['nombre'] ?? '';
         $descripcion = $_POST['descripcion'] ?? '';
+        $requisitos = $_POST['requisitos'] ?? '';
+        $beneficios = $_POST['beneficios'] ?? '';
         $nivel = $_POST['nivel'] ?? '';
         $modalidad = $_POST['modalidad'] ?? '';
         $publicado_por = $_POST['publicado_por'] ?? '';
         $fecha = $_POST['fecha'] ?? '';
         $presupuesto = $_POST['presupuesto'] ?? '';
+
+        // Validar que todos los campos estén llenos
+        if (
+            !empty($nombre) && !empty($descripcion) && !empty($requisitos) && !empty($beneficios) && !empty($nivel)
+            && !empty($modalidad) && !empty($publicado_por) && !empty($fecha) && !empty($presupuesto)
+        ) {
+            // Insertar la oferta en la base de datos
+            $stmt = $conn->prepare("INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES 
+                (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssssi", $nombre, $descripcion, $requisitos, $beneficios, $nivel, 
+            $modalidad, $publicado_por, $fecha, $presupuesto);
+
+            if ($stmt->execute()) {
+                $mensaje = 'Oferta publicada exitosamente';
+            } else {
+                $error = 'Error al publicar la oferta';
+            }
+        } else {
+            $error = 'Complete todos los campos';
+        }
     }
 }
+
+// Obtener todas las categorias para mostrar
+$result = $conn->query("SELECT * FROM oferta");
+$ofertas = $result->fetch_all(MYSQLI_ASSOC);
 
 // Datos de ejemplo para ofertas (esto vendría de la base de datos)
 /*$ofertas = [
@@ -196,7 +220,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                     <div class="row align-items-center">
                         <div class="col-lg-8">
                             <div class="d-flex align-items-center mb-2">
-                                <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
+                                <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['nombre']); ?></h5>
                                 <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
                             </div>
                             <p class="text-muted mb-3"><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
@@ -207,7 +231,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted d-block">Tipo</small>
-                                    <strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong>
+                                    <strong><?php echo htmlspecialchars($oferta['modalidad']); ?></strong>
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted d-block">Publicado por</small>
@@ -220,7 +244,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                             </div>
                         </div>
                         <div class="col-lg-4 text-lg-end">
-                            <div class="price-highlight mb-3"><?php echo htmlspecialchars($oferta['presupuesto']); ?></div>
+                            <div class="price-highlight mb-3">$<?php echo htmlspecialchars($oferta['presupuesto']); ?></div>
                             <div>
                                 <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#offerModal<?php echo $oferta['id']; ?>">
                                     <i class="bi bi-eye me-1"></i>Ver detalles
@@ -304,7 +328,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
+                        <h5 class="modal-title"><?php echo htmlspecialchars($oferta['nombre']); ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
@@ -313,7 +337,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                                 <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
                             </div>
                             <div class="col-md-6 text-md-end">
-                                <span class="price-highlight"><?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
+                                <span class="price-highlight">$<?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
                             </div>
                         </div>
 
@@ -322,8 +346,8 @@ $tipo_filtro = $_GET['tipo'] ?? '';
 
                         <h6>Requisitos</h6>
                         <ul>
-                            <?php foreach ($oferta['requisitos'] as $requisito): ?>
-                                <li><?php echo htmlspecialchars($requisito); ?></li>
+                            <?php foreach ($oferta['requisitos'] as $requisitos): ?>
+                                <li><?php echo htmlspecialchars($requisitos); ?></li>
                             <?php endforeach; ?>
                         </ul>
 
@@ -339,7 +363,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Modalidad</small>
-                                <div><strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong></div>
+                                <div><strong><?php echo htmlspecialchars($oferta['modalidad']); ?></strong></div>
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Publicado por</small>

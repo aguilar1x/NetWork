@@ -265,11 +265,6 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 <i class="bi bi-code-square learn-category-icon"></i>
                                 <h3 class="h4 mb-3"><?php echo htmlspecialchars($categoria['nombre']); ?></h3>
                                 <p class="mb-4 text-muted"><?php echo htmlspecialchars($categoria['descripcion']); ?></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a href="?categoria=desarrollo-web" class="text-decoration-none">
-                                        <i class="bi bi-arrow-right"></i>
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -370,9 +365,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 <div class="learn-course-content">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?> horas</span>
-                                        <div class="d-flex align-items-center">
-                                            <i class="bi bi-star-fill text-warning me-1"></i>
-                                        </div>
+
                                     </div>
                                     <h5 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h5>
                                     <p class="text-muted mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
@@ -432,14 +425,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                             <div class="row">
                                 <div class="col-lg-8">
                                     <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['nombre_categoria'] ?? 'Sin categoría'); ?></span>
-                                    <h3 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h3>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="me-4">
-                                            <i class="bi bi-star-fill text-warning me-1"></i>
-                                            <span><?php echo htmlspecialchars($curso['rating']); ?></span>
-                                        </div>
-                                        <span class="text-muted"><?php echo htmlspecialchars($curso['estudiantes']); ?> estudiantes</span>
-                                    </div>
+                                    <h3 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h3>
                                     <p class="mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?> Este curso te llevará desde los conceptos básicos hasta técnicas avanzadas.</p>
 
                                     <h5 class="mb-3">Lo que aprenderás</h5>
@@ -452,9 +438,9 @@ $busqueda = $_GET['busqueda'] ?? '';
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="learn-price-card">
-                                        <h4 class="mb-4"><?php echo htmlspecialchars($curso['precio']); ?></h4>
+                                        <h4 class="mb-4">$<?php echo htmlspecialchars($curso['precio']); ?></h4>
                                         <ul class="list-unstyled mb-4">
-                                            <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['duracion']); ?> de video</li>
+                                            <li class="mb-3"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?> horas de video</li>
                                             <li class="mb-3"><i class="bi bi-file-text me-2"></i>5 proyectos prácticos</li>
                                             <li class="mb-3"><i class="bi bi-infinity me-2"></i>Acceso de por vida</li>
                                             <li class="mb-3"><i class="bi bi-award me-2"></i>Certificado</li>
