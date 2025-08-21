@@ -82,6 +82,7 @@ CREATE TABLE curso (
 
 CREATE TABLE oferta (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
     id_categoria INT NOT NULL,
     id_estado INT NOT NULL,
     nombre VARCHAR(100),
@@ -93,6 +94,7 @@ CREATE TABLE oferta (
     publicado_por VARCHAR(100),
     fecha DATE,
     presupuesto DECIMAL(10,2),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     FOREIGN KEY (id_categoria) REFERENCES categoria(id),
     FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
@@ -149,15 +151,15 @@ io excepcionales.', 39.99, 12, 'img/figma.jpg'),
 'Aprende los fundamentos del diseño gráfico, desde teoría del color y tipografía, con herramientas como Photoshop y más.', 
 120.00, 25, 'img/diseñoGrafico.jpg');
 
-INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES
-(1, 1, 'Desarrollador Frontend React', 'Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.', 
+INSERT INTO oferta (id_usuario, id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES
+(2, 1, 1, 'Desarrollador Frontend React', 'Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.', 
 '["Experiencia mínima 1 año con React.", "Conocimiento de REST APIs.", "Trabajo Remoto."]', 
 'Pago puntual, flexibilidad horaria.', 'Intermedio', 'Remoto', 'TechStartup Co.', '2024-01-15', 300.00),
 
-(5, 1, 'Diseñador gráfico para branding', 'Necesitamos diseñador para crear identidad visual completa.',
+(2, 5, 1, 'Diseñador gráfico para branding', 'Necesitamos diseñador para crear identidad visual completa.',
 '["Experiencia en Adobe Creative Suite.", "Portafolio de branding.", "Disponiblidad presencial."]', 
 'Proyecto creativo, oportunidad de crecimiento.', 'Básico', 'Presencial', 'Marketing Agency', '2024-01-14', 150.00),
 
-(6, 1, 'Copywriter para blog de tecnología', 'Buscamos redactor especializado en contenido tecnológico.', 
+(2, 6, 1, 'Copywriter para blog de tecnología', 'Buscamos redactor especializado en contenido tecnológico.', 
 '["Experiencia en copywriting tech.", "Conocimiento en SEO.", "Portafolio de artículos."]', 
 'Proyecto a largo plazo, buen pago.', 'Avanzado', 'Híbrido', 'Tech Blog Inc.', '2024-01-13', 600.00);

@@ -1151,6 +1151,107 @@ section {
     color: #1d4ed8 !important;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24) !important;
 }
+
+/* Estilos para botones administrativos */
+.btn-admin {
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    border: none;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+}
+
+/* Estilos para alertas con botón de cerrar */
+.alert-dismissible {
+    position: relative;
+    padding-right: 3rem;
+}
+
+.alert.alert-dismissible .btn-close,
+.alert-dismissible .btn-close {
+    position: absolute !important;
+    top: -14px !important;
+    right: 0 !important;
+    z-index: 2;
+    padding: 0.75rem 1rem !important;
+    background: transparent !important;
+    border: 0 !important;
+    font-size: 1.25rem !important;
+    line-height: 1 !important;
+    color: #000 !important;
+    text-shadow: 0 1px 0 #fff !important;
+    opacity: 0.5 !important;
+    transition: opacity 0.15s !important;
+    transform: none !important;
+}
+
+.alert-dismissible .btn-close:hover {
+    opacity: 0.75;
+}
+
+.alert-dismissible .btn-close:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+.btn-admin:hover {
+    background: linear-gradient(135deg, #0284c7, #1d4ed8);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-admin.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Estilos específicos para botones de acción en tablas administrativas */
+.admin-card .table td:last-child {
+    padding: 0.75rem;
+    text-align: center;
+    width: 120px;
+}
+
+.admin-card .table .d-flex.gap-2 {
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem !important;
+}
+
+.admin-card .table .btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 14px;
+    margin: 0;
+}
+
+.admin-card .table .btn i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.admin-card .table form {
+    margin: 0;
+    display: inline;
+}
+
+.admin-card .table form .btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
 .admin-card {
     border: 1px solid #e9ecef;
     border-radius: 16px;

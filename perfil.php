@@ -84,14 +84,6 @@ $initial = strtoupper(substr($displayName, 0, 1));
                         <label class="form-label fw-bold">Correo electrónico</label>
                         <p id="correoUsuario"><?php echo htmlspecialchars($userRow['correo'] ?? '—'); ?></p>
                     </div>
-                    <div class="pb-3">
-                        <label class="form-label fw-bold">Edad</label>
-                        <p id="edadUsuario">—</p>
-                    </div>
-                    <div class="pb-3">
-                        <label class="form-label fw-bold">Ubicación</label>
-                        <p id="ubicacionUsuario">—</p>
-                    </div>
                 </section>
             </aside>
 
@@ -193,14 +185,6 @@ $initial = strtoupper(substr($displayName, 0, 1));
                         <div class="mb-3">
                             <label for="editCorreo" class="form-label">Correo Electrónico</label>
                             <input type="email" class="form-control" id="editCorreo" placeholder="tu@email.com">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEdad" class="form-label">Edad</label>
-                            <input type="number" class="form-control" id="editEdad" min="18" max="99">
-                        </div>
-                        <div class="mb-3">
-                            <label for="editUbicacion" class="form-label">Ubicación</label>
-                            <input type="text" class="form-control" id="editUbicacion" placeholder="Ciudad, País">
                         </div>
                     </form>
                 </div>

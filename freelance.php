@@ -18,185 +18,206 @@ if (!User::isLoggedIn()) {
 
 // Obtener información del usuario actual
 $currentUser = User::getCurrentUser();
-$es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar y eliminar
+$es_admin = ($currentUser['rol'] === 1);
 
 // Procesar formulario de nueva oferta
 $mensaje = '';
+$error = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
+    $tituloOferta = trim($_POST['tituloOferta'] ?? '');
+    $categoriaOferta = $_POST['categoriaOferta'] ?? '';
+    $nivelOferta = $_POST['nivelOferta'] ?? '';
+    $presupuestoOferta = $_POST['presupuestoOferta'] ?? '';
+    $tipoOferta = $_POST['tipoOferta'] ?? '';
+    $descripcionOferta = trim($_POST['descripcionOferta'] ?? '');
 
-    // CREAR OFERTA (solo administradores)
-    if ($es_admin) {
-        $nombre = $_POST['nombre'] ?? '';
-        $descripcion = $_POST['descripcion'] ?? '';
-        $requisitos = $_POST['requisitos'] ?? '';
-        $beneficios = $_POST['beneficios'] ?? '';
-        $nivel = $_POST['nivel'] ?? '';
-        $modalidad = $_POST['modalidad'] ?? '';
-        $publicado_por = $_POST['publicado_por'] ?? '';
-        $fecha = $_POST['fecha'] ?? '';
-        $presupuesto = $_POST['presupuesto'] ?? '';
-
-        // Validar que todos los campos estén llenos
-        if (
-            !empty($nombre) && !empty($descripcion) && !empty($requisitos) && !empty($beneficios) && !empty($nivel)
-            && !empty($modalidad) && !empty($publicado_por) && !empty($fecha) && !empty($presupuesto)
-        ) {
+    // Validar que todos los campos estén llenos
+    if (!empty($tituloOferta) && !empty($categoriaOferta) && !empty($nivelOferta) && 
+        !empty($presupuestoOferta) && !empty($tipoOferta) && !empty($descripcionOferta)) {
+        
+        // Obtener el ID de la categoría
+        $stmt = $conn->prepare("SELECT id FROM categoria WHERE nombre = ?");
+        $stmt->bind_param("s", $categoriaOferta);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categoria = $result->fetch_assoc();
+        
+        if ($categoria) {
             // Insertar la oferta en la base de datos
-            $stmt = $conn->prepare("INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES 
-                (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param(
-                "ssssssssi",
-                $nombre,
-                $descripcion,
-                $requisitos,
-                $beneficios,
-                $nivel,
-                $modalidad,
-                $publicado_por,
-                $fecha,
-                $presupuesto
+            $stmt = $conn->prepare("INSERT INTO oferta (id_usuario, id_categoria, id_estado, nombre, descripcion, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES (?, ?, 1, ?, ?, ?, ?, ?, CURDATE(), ?)");
+            $stmt->bind_param("iisssssd", 
+                $currentUser['id'],
+                $categoria['id'],
+                $tituloOferta,
+                $descripcionOferta,
+                $nivelOferta,
+                $tipoOferta,
+                $currentUser['nombre'],
+                $presupuestoOferta
             );
 
             if ($stmt->execute()) {
                 $mensaje = 'Oferta publicada exitosamente';
             } else {
-                $error = 'Error al publicar la oferta';
+                $error = 'Error al publicar la oferta: ' . $conn->error;
             }
         } else {
-            $error = 'Complete todos los campos';
+            $error = 'Categoría no válida';
         }
+    } else {
+        $error = 'Complete todos los campos obligatorios';
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // EDITAR OFERTA EXISTENTE (solo administradores)
-    if ($accion === 'editar') {
-        $id = $_POST['id'] ?? '';
-        $categoria = $_POST['id_categoria'] ?? '';
-        $estado = $_POST['id_estado'] ?? '';
-        $nombre = $_POST['nombre'] ?? '';
-        $descripcion = $_POST['descripcion'] ?? '';
-        $requisitos = $_POST['requisitos'] ?? '';
-        $beneficios = $_POST['beneficios'] ?? '';
-        $nivel = $_POST['nivel'] ?? '';
-        $modalidad = $_POST['modalidad'] ?? '';
-        $publicado_por = $_POST['publicado_por'] ?? '';
-        $fecha = $_POST['fecha'] ?? '';
-        $presupuesto = $_POST['presupuesto'] ?? '';
+// Procesar edición de oferta
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_oferta'])) {
+    $id_oferta = $_POST['id_oferta'] ?? '';
+    $tituloOferta = trim($_POST['tituloOferta'] ?? '');
+    $categoriaOferta = $_POST['categoriaOferta'] ?? '';
+    $nivelOferta = $_POST['nivelOferta'] ?? '';
+    $presupuestoOferta = $_POST['presupuestoOferta'] ?? '';
+    $tipoOferta = $_POST['tipoOferta'] ?? '';
+    $descripcionOferta = trim($_POST['descripcionOferta'] ?? '');
 
-        // Validar que todos los campos estén llenos
-        if (
-            !empty($id) && !empty($categoria) && !empty($estado) && !empty($nombre) && !empty($descripcion)
-            && !empty($requisitos) && !empty($beneficios) && !empty($nivel) && !empty($modalidad)
-            && !empty($publicado_por) && !empty($fecha) && !empty($presupuesto)
-        ) {
-            // Actualizar la oferta en la base de datos
-            $stmt = $conn->prepare("UPDATE oferta SET id_categoria = ?, id_estado = ?, nombre = ?, descripcion = ?, requisitos = ?, beneficios = ?, nivel = ?, modalidad = ?, publicado_por = ?, fecha = ?, presupuesto = ? WHERE id = ?");
-            $stmt->bind_param(
-                "iissssssssii",
-                $categoria,
-                $estado,
-                $nombre,
-                $descripcion,
-                $requisitos,
-                $beneficios,
-                $nivel,
-                $modalidad,
-                $publicado_por,
-                $fecha,
-                $presupuesto,
-                $id
-            );
+    // Verificar que el usuario sea el propietario de la oferta o admin
+    $stmt = $conn->prepare("SELECT id_usuario FROM oferta WHERE id = ?");
+    $stmt->bind_param("i", $id_oferta);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $oferta = $result->fetch_assoc();
 
-            if ($stmt->execute()) {
-                $mensaje = 'Oferta actualizada exitosamente';
+    if ($oferta && ($oferta['id_usuario'] == $currentUser['id'] || $es_admin)) {
+        if (!empty($tituloOferta) && !empty($categoriaOferta) && !empty($nivelOferta) && 
+            !empty($presupuestoOferta) && !empty($tipoOferta) && !empty($descripcionOferta)) {
+            
+            // Obtener el ID de la categoría
+            $stmt = $conn->prepare("SELECT id FROM categoria WHERE nombre = ?");
+            $stmt->bind_param("s", $categoriaOferta);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $categoria = $result->fetch_assoc();
+            
+            if ($categoria) {
+                // Actualizar la oferta
+                $stmt = $conn->prepare("UPDATE oferta SET id_categoria = ?, nombre = ?, descripcion = ?, nivel = ?, modalidad = ?, presupuesto = ? WHERE id = ?");
+                $stmt->bind_param("issssdi", 
+                    $categoria['id'],
+                    $tituloOferta,
+                    $descripcionOferta,
+                    $nivelOferta,
+                    $tipoOferta,
+                    $presupuestoOferta,
+                    $id_oferta
+                );
+
+                if ($stmt->execute()) {
+                    $mensaje = 'Oferta actualizada exitosamente';
+                } else {
+                    $error = 'Error al actualizar la oferta: ' . $conn->error;
+                }
             } else {
-                $error = 'Error al actualizar la oferta';
+                $error = 'Categoría no válida';
             }
+        } else {
+            $error = 'Complete todos los campos obligatorios';
         }
-    }
-
-    // ELIMINAR OFERTA (solo administradores)
-    if ($accion === 'eliminar') {
-        $id = $_POST['id'] ?? '';
-        if (!empty($id)) {
-            // Eliminar la oferta de la base de datos
-            $stmt = $conn->prepare("DELETE FROM oferta WHERE id = ?");
-            $stmt->bind_param("i", $id);
-
-            if ($stmt->execute()) {
-                $mensaje = 'Oferta eliminada exitosamente';
-            } else {
-                $error = 'Error al eliminar la oferta';
-            }
-        }
+    } else {
+        $error = 'No tienes permisos para editar esta oferta';
     }
 }
 
-// Obtener ofertas con nombre de categoría
-$result = $conn->query("SELECT o.*, c.nombre AS categoria FROM oferta o LEFT JOIN categoria c ON c.id = o.id_categoria");
+// Procesar eliminación de oferta
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_oferta'])) {
+    $id_oferta = $_POST['id_oferta'] ?? '';
+
+    // Verificar que el usuario sea el propietario de la oferta o admin
+    $stmt = $conn->prepare("SELECT id_usuario FROM oferta WHERE id = ?");
+    $stmt->bind_param("i", $id_oferta);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $oferta = $result->fetch_assoc();
+
+    if ($oferta && ($oferta['id_usuario'] == $currentUser['id'] || $es_admin)) {
+        $stmt = $conn->prepare("DELETE FROM oferta WHERE id = ?");
+        $stmt->bind_param("i", $id_oferta);
+
+        if ($stmt->execute()) {
+            $mensaje = 'Oferta eliminada exitosamente';
+        } else {
+            $error = 'Error al eliminar la oferta: ' . $conn->error;
+        }
+    } else {
+        $error = 'No tienes permisos para eliminar esta oferta';
+    }
+}
+
+// Obtener ofertas con nombre de categoría y usuario
+$query = "SELECT o.*, c.nombre AS categoria, u.nombre AS nombre_usuario 
+          FROM oferta o 
+          LEFT JOIN categoria c ON c.id = o.id_categoria 
+          LEFT JOIN usuarios u ON u.id = o.id_usuario 
+          WHERE o.id_estado = 1 
+          ORDER BY o.fecha DESC";
+$result = $conn->query($query);
 $ofertas = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
-// Datos de ejemplo para ofertas (esto vendría de la base de datos)
-/*$ofertas = [
-    [
-        'id' => 1,
-        'titulo' => 'Desarrollador Frontend React',
-        'categoria' => 'Desarrollo Web',
-        'nivel' => 'Intermedio',
-        'presupuesto' => '$300',
-        'tipo' => 'Remoto',
-        'descripcion' => 'Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.',
-        'requisitos' => [
-            'Experiencia mínima 1 año con React',
-            'Conocimiento de REST APIs',
-            'Trabajo remoto'
-        ],
-        'beneficios' => 'Pago puntual, flexibilidad horaria.',
-        'publicado_por' => 'TechStartup Co.',
-        'fecha' => '2024-01-15'
-    ],
-    [
-        'id' => 2,
-        'titulo' => 'Diseñador gráfico para branding',
-        'categoria' => 'Diseño Gráfico',
-        'nivel' => 'Básico',
-        'presupuesto' => '$150',
-        'tipo' => 'Presencial',
-        'descripcion' => 'Necesitamos diseñador para crear identidad visual completa.',
-        'requisitos' => [
-            'Experiencia en Adobe Creative Suite',
-            'Portfolio de branding',
-            'Disponibilidad presencial'
-        ],
-        'beneficios' => 'Proyecto creativo, oportunidad de crecimiento.',
-        'publicado_por' => 'Marketing Agency',
-        'fecha' => '2024-01-14'
-    ],
-    [
-        'id' => 3,
-        'titulo' => 'Copywriter para blog de tecnología',
-        'categoria' => 'Escritura',
-        'nivel' => 'Avanzado',
-        'presupuesto' => '$600',
-        'tipo' => 'Híbrido',
-        'descripcion' => 'Buscamos redactor especializado en contenido tecnológico.',
-        'requisitos' => [
-            'Experiencia en copywriting tech',
-            'SEO knowledge',
-            'Portafolio de artículos'
-        ],
-        'beneficios' => 'Proyecto a largo plazo, buen pago.',
-        'publicado_por' => 'Tech Blog Inc.',
-        'fecha' => '2024-01-13'
-    ]
-];*/
+// Obtener categorías para el formulario
+$categorias_result = $conn->query("SELECT nombre FROM categoria WHERE id_estado = 1");
+$categorias = $categorias_result ? $categorias_result->fetch_all(MYSQLI_ASSOC) : [];
 
 // Filtros
 $categoria_filtro = $_GET['categoria'] ?? '';
 $nivel_filtro = $_GET['nivel'] ?? '';
 $presupuesto_filtro = $_GET['presupuesto'] ?? '';
 $tipo_filtro = $_GET['tipo'] ?? '';
+
+// Aplicar filtros si están establecidos
+if ($categoria_filtro || $nivel_filtro || $presupuesto_filtro || $tipo_filtro) {
+    $where_conditions = ["o.id_estado = 1"];
+    $params = [];
+    $types = "";
+
+    if ($categoria_filtro) {
+        $where_conditions[] = "c.nombre = ?";
+        $params[] = $categoria_filtro;
+        $types .= "s";
+    }
+
+    if ($nivel_filtro) {
+        $where_conditions[] = "o.nivel = ?";
+        $params[] = $nivel_filtro;
+        $types .= "s";
+    }
+
+    if ($tipo_filtro) {
+        $where_conditions[] = "o.modalidad = ?";
+        $params[] = $tipo_filtro;
+        $types .= "s";
+    }
+
+    if ($presupuesto_filtro) {
+        $where_conditions[] = "o.presupuesto <= ?";
+        $params[] = $presupuesto_filtro;
+        $types .= "d";
+    }
+
+    $where_clause = implode(" AND ", $where_conditions);
+    $query = "SELECT o.*, c.nombre AS categoria, u.nombre AS nombre_usuario 
+              FROM oferta o 
+              LEFT JOIN categoria c ON c.id = o.id_categoria 
+              LEFT JOIN usuarios u ON u.id = o.id_usuario 
+              WHERE $where_clause 
+              ORDER BY o.fecha DESC";
+
+    $stmt = $conn->prepare($query);
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $ofertas = $result->fetch_all(MYSQLI_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -224,6 +245,12 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
+        <?php if ($error): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo htmlspecialchars($error); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
         <!-- FILTROS para búsqueda -->
         <section class="filter-section">
@@ -233,11 +260,11 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                     <label for="categoria" class="form-label">Categoría</label>
                     <select id="categoria" class="form-select" name="categoria">
                         <option value="">Todas</option>
-                        <option value="desarrollo-web" <?php echo $categoria_filtro === 'desarrollo-web' ? 'selected' : ''; ?>>Desarrollo Web</option>
-                        <option value="diseno-grafico" <?php echo $categoria_filtro === 'diseno-grafico' ? 'selected' : ''; ?>>Diseño Gráfico</option>
-                        <option value="marketing" <?php echo $categoria_filtro === 'marketing' ? 'selected' : ''; ?>>Marketing</option>
-                        <option value="escritura" <?php echo $categoria_filtro === 'escritura' ? 'selected' : ''; ?>>Escritura</option>
-                        <option value="otro" <?php echo $categoria_filtro === 'otro' ? 'selected' : ''; ?>>Otro</option>
+                        <?php foreach ($categorias as $cat): ?>
+                            <option value="<?php echo htmlspecialchars($cat['nombre']); ?>" <?php echo $categoria_filtro === $cat['nombre'] ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($cat['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -286,8 +313,15 @@ $tipo_filtro = $_GET['tipo'] ?? '';
         <!-- LISTADO DE OFERTAS -->
         <section id="offersList">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3><i class="bi bi-briefcase me-2"></i>Ofertas disponibles</h3>
-                <span class="badge bg-secondary"><?php echo count($ofertas); ?> ofertas encontradas</span>
+                <h3 class="mb-0"><i class="bi bi-briefcase me-2"></i>Ofertas disponibles</h3>
+                <div class="d-flex align-items-center gap-2">
+                    <?php if ($es_admin): ?>
+                    <a href="admin-ofertas.php" class="btn btn-admin btn-sm">
+                        <i class="bi bi-gear me-2"></i>Admin Ofertas
+                    </a>
+                    <?php endif; ?>
+                    <span class="badge bg-secondary"><?php echo count($ofertas); ?> ofertas encontradas</span>
+                </div>
             </div>
 
             <?php foreach ($ofertas as $oferta): ?>
@@ -310,7 +344,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted d-block">Publicado por</small>
-                                    <strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong>
+                                    <strong><?php echo htmlspecialchars($oferta['nombre_usuario']); ?></strong>
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted d-block">Fecha</small>
@@ -350,11 +384,11 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                     <label for="categoriaOferta" class="form-label">Categoría *</label>
                     <select id="categoriaOferta" class="form-select" name="categoriaOferta" required>
                         <option value="">Seleccione...</option>
-                        <option value="desarrollo-web">Desarrollo Web</option>
-                        <option value="diseno-grafico">Diseño Gráfico</option>
-                        <option value="marketing">Marketing</option>
-                        <option value="escritura">Escritura</option>
-                        <option value="otro">Otro</option>
+                        <?php foreach ($categorias as $cat): ?>
+                            <option value="<?php echo htmlspecialchars($cat['nombre']); ?>">
+                                <?php echo htmlspecialchars($cat['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
@@ -443,7 +477,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Publicado por</small>
-                                <div><strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong></div>
+                                <div><strong><?php echo htmlspecialchars($oferta['nombre_usuario']); ?></strong></div>
                             </div>
                             <div class="col-md-3">
                                 <small class="text-muted">Fecha publicación</small>
@@ -452,30 +486,116 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
-                            <i class="bi bi-send me-2"></i>Aplicar a esta oferta
-                        </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
+                            <i class="bi bi-send me-1"></i>Aplicar
+                        </button>
+                        <?php if ($oferta['id_usuario'] == $currentUser['id'] || $es_admin): ?>
+                            <button type="button" class="btn btn-warning" onclick="editarOferta(<?php echo $oferta['id']; ?>)">
+                                <i class="bi bi-pencil me-1"></i>Editar
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="eliminarOferta(<?php echo $oferta['id']; ?>)">
+                                <i class="bi bi-trash me-1"></i>Eliminar
+                            </button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
     <?php endforeach; ?>
 
+    <!-- Modal para editar oferta -->
+    <div class="modal fade" id="editarOfertaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar oferta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form method="POST" id="editarOfertaForm">
+                    <input type="hidden" name="editar_oferta" value="1">
+                    <input type="hidden" name="id_oferta" id="editar_id_oferta">
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="editar_tituloOferta" class="form-label">Título de la oferta *</label>
+                                <input type="text" class="form-control" id="editar_tituloOferta" name="tituloOferta" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editar_categoriaOferta" class="form-label">Categoría *</label>
+                                <select id="editar_categoriaOferta" class="form-select" name="categoriaOferta" required>
+                                    <option value="">Seleccione...</option>
+                                    <?php foreach ($categorias as $cat): ?>
+                                        <option value="<?php echo htmlspecialchars($cat['nombre']); ?>">
+                                            <?php echo htmlspecialchars($cat['nombre']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="editar_nivelOferta" class="form-label">Nivel requerido *</label>
+                                <select id="editar_nivelOferta" class="form-select" name="nivelOferta" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="basico">Básico</option>
+                                    <option value="intermedio">Intermedio</option>
+                                    <option value="avanzado">Avanzado</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="editar_presupuestoOferta" class="form-label">Presupuesto (USD) *</label>
+                                <input type="number" class="form-control" id="editar_presupuestoOferta" name="presupuestoOferta" min="0" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="editar_tipoOferta" class="form-label">Tipo de trabajo *</label>
+                                <select id="editar_tipoOferta" class="form-select" name="tipoOferta" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="remoto">Remoto</option>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="hibrido">Híbrido</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="editar_descripcionOferta" class="form-label">Descripción del proyecto *</label>
+                                <textarea id="editar_descripcionOferta" class="form-control" name="descripcionOferta" rows="4" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario oculto para eliminar oferta -->
+    <form method="POST" id="eliminarOfertaForm" style="display: none;">
+        <input type="hidden" name="eliminar_oferta" value="1">
+        <input type="hidden" name="id_oferta" id="eliminar_id_oferta">
+    </form>
+
     <!-- Footer -->
     <footer class="footer text-center mt-1"></footer>
 
+    <!-- Scripts -->
     <script>
         // Pasar datos del usuario a JavaScript
         window.currentUser = {
             nombre: '<?php echo htmlspecialchars($currentUser['nombre']); ?>'
         };
     </script>
+
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="./js/freelance.js"></script>
     <script src="./js/components/header.js"></script>
     <script src="./js/components/footer.js"></script>
     <script src="./js/index.js"></script>
-</body>
 
+
+</body>
 </html>

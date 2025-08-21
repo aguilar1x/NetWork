@@ -41,6 +41,11 @@ if (!empty($ubicacion_filtro)) {
 
 $stmt = $conn->prepare($query);
 
+// Verificar si la preparación fue exitosa
+if ($stmt === false) {
+    die("Error en la preparación de la consulta: " . $conn->error);
+}
+
 $paramTypes = '';
 $params = [];
 
@@ -66,17 +71,47 @@ if ($paramTypes) {
     $stmt->bind_param($paramTypes, ...$params);
 }
 
-$stmt->execute();
+if (!$stmt->execute()) {
+    die("Error al ejecutar la consulta: " . $stmt->error);
+}
 $result = $stmt->get_result();
 $profesionales = $result->fetch_all(MYSQLI_ASSOC);
 
+// Convertir skills de string a array para cada profesional
+foreach ($profesionales as &$profesional) {
+    if (isset($profesional['skills']) && !empty($profesional['skills'])) {
+        $profesional['skills'] = explode(',', $profesional['skills']);
+    } else {
+        $profesional['skills'] = [];
+    }
+}
+
 
 // Eventos de networking desde la DB
-$queryEventos = "SELECT * FROM evento ORDER BY fecha_hora ASC";
+$queryEventos = "SELECT id, nombre as titulo, descripcion, fecha_hora, ubicacion FROM evento ORDER BY fecha_hora ASC";
 $stmtEventos = $conn->prepare($queryEventos);
-$stmtEventos->execute();
+
+// Verificar si la preparación fue exitosa
+if ($stmtEventos === false) {
+    die("Error en la preparación de la consulta de eventos: " . $conn->error);
+}
+
+if (!$stmtEventos->execute()) {
+    die("Error al ejecutar la consulta de eventos: " . $stmtEventos->error);
+}
+
 $resultEventos = $stmtEventos->get_result();
 $eventos = $resultEventos->fetch_all(MYSQLI_ASSOC);
+
+// Procesar eventos para agregar campos faltantes
+foreach ($eventos as &$evento) {
+    // Extraer fecha y hora de fecha_hora
+    $fecha_hora = new DateTime($evento['fecha_hora']);
+    $evento['fecha'] = $fecha_hora->format('Y-m-d');
+    $evento['hora'] = $fecha_hora->format('H:i');
+    $evento['tipo'] = 'Presencial'; // Valor por defecto
+    $evento['asistentes'] = rand(10, 50); // Valor aleatorio para demo
+}
 
 
 // Procesar búsqueda
@@ -164,7 +199,19 @@ $ubicacion_filtro = $_GET['ubicacion'] ?? '';
         <div class="row">
             <!-- Columna principal - Perfiles -->
             <div class="col-lg-8">
-                <h3 class="mb-4"><i class="bi bi-people me-2"></i>Profesionales destacados</h3>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="mb-0"><i class="bi bi-people me-2"></i>Profesionales destacados</h3>
+                    <div class="d-flex gap-2 align-items-center">
+                        <!-- Debug: Rol del usuario: <?php echo $currentUser['rol'] ?? 'No definido'; ?> -->
+                        <?php if ($currentUser['rol'] == 1): ?>
+                        <a href="admin-eventos.php" class="btn btn-admin btn-sm">
+                            <i class="bi bi-gear me-2"></i>Panel Administrativo - Eventos
+                        </a>
+                        <?php else: ?>
+                        <!-- Usuario no es admin (rol: <?php echo $currentUser['rol'] ?? 'No definido'; ?>) -->
+                        <?php endif; ?>
+                    </div>
+                </div>
                 
                 <div class="row">
                     <?php foreach ($profesionales as $profesional): ?>
