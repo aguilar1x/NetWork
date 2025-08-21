@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // ELIMINAR CATEGORIA (solo administradores)
+    // ELIMINAR OFERTA (solo administradores)
     if ($accion === 'eliminar') {
         $id = $_POST['id'] ?? '';
         if (!empty($id)) {
