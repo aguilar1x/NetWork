@@ -24,8 +24,8 @@ CREATE TABLE usuarios (
     id_estado INT NOT NULL,
     id_rol INT NOT NULL,
     nombre VARCHAR(100),
-    usuario VARCHAR(100),
     correo VARCHAR(100) UNIQUE,
+    usuario VARCHAR(100),
     contrasena VARCHAR(255),
     FOREIGN KEY (id_estado) REFERENCES estado(id),
     FOREIGN KEY (id_rol) REFERENCES rol(id)
@@ -71,11 +71,13 @@ CREATE TABLE oferta (
     id_estado INT NOT NULL,
     nombre VARCHAR(100),
     descripcion TEXT,
+    requisitos TEXT,
+    beneficios TEXT,
     nivel VARCHAR(100) NOT NULL,
-    presupuesto DECIMAL(10,2),
     modalidad VARCHAR(100) NOT NULL,
-    nombre_empresa VARCHAR(100),
+    publicado_por VARCHAR(100),
     fecha DATE,
+    presupuesto DECIMAL(10,2),
     FOREIGN KEY (id_categoria) REFERENCES categoria(id),
     FOREIGN KEY (id_estado) REFERENCES estado(id)
 );
@@ -104,26 +106,38 @@ INSERT INTO usuarios (id_estado, id_rol, nombre, correo, usuario, contrasena) VA
 (1, 1, 'Admin NetWork', 'admin@network.com', 'admin',
 '$2y$10$2O5vLHR.GEKQZFRgTAzpiebK0sIw2bZT4E5m4TP3wayqhOQGjhW5.');
 
-INSERT INTO evento (id_estado, nombre, descripcion, fecha_hora, ubicacion) VALUES
+INSERT INTO evento (id_estado, nombre, descripcion, fecha_hora, ubicacion) VALUES -- Falta añadir los eventos que están creados en la página
 (1, 'Rediseñando Experiencias: Taller de UX/UI para Apps Móviles',
 'Aprende a detectar problemas de usabilidad y rediseñar interfaces móviles de forma práctica.',
 '2025-09-12 10:00:00', 'Ciudad de México, México');
 
 INSERT INTO reporte (id_usuario, id_usuario_reportar, id_estado, motivo) VALUES
-(1, 2, 1, 'Publicación de oferta laboral falsa.');
+(2, 1, 1, 'Publicación de oferta laboral falsa.');
 
 INSERT INTO curso (id_categoria, id_estado, nombre, descripcion, precio, tiempo_horas, imagen) VALUES
-(1, 1, 'React desde Cero a Experto', 'Domina React.js y crea aplicaciones web modernas con las mejores prácticas.', 49.99, 15, '../img/react.jpg'), 
+(1, 1, 'React desde Cero a Experto', 'Domina React.js y crea aplicaciones web modernas con las mejores prácticas.', 49.99, 15, 'img/react.jpg'), 
 
-(2, 1, 'Diseño UX/UI con Figma', 'Aprende a crear interfaces modernas y experiencias de usuario excepcionales.', 39.99, 12, '../img/figma.jpg'), 
+(2, 1, 'Diseño UX/UI con Figma', 'Aprende a crear interfaces modernas y experiencias de usuar.
+io excepcionales.', 39.99, 12, 'img/figma.jpg'), 
 
-(3, 1, 'Marketing Digital Completo', 'Estrategias actualizadas de marketing digital y growth hacking.', 59.99, 20, '../img/marketingdigital.jpg'),
+(3, 1, 'Marketing Digital Completo', 'Estrategias actualizadas de marketing digital y growth hacking.', 59.99, 20, 'img/marketingdigital.jpg'),
 
 (5, 1, 'Diseño Gráfico de Cero a Experto', 
 'Aprende los fundamentos del diseño gráfico, desde teoría del color y tipografía, con herramientas como Photoshop y más.', 
-120, 25, '../img/disenoGrafico');
+120.00, 25, 'img/diseñoGrafico.jpg');
 
-INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, nivel, presupuesto, modalidad, nombre_empresa, fecha) VALUES
-(1, 1, 'Desarrollador Backend', 
-'Desarrollador backend con experiencia en Node.js y MongoDB para proyecto de 2 meses. Se valorará experiencia en API REST y buenas prácticas de código.', 
-'Avanzado', 1200, 'Remoto', 'Innovatech CR', '2025-08-18');
+INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES
+(1, 1, 'Desarrollador Frontend React', 'Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.', 
+'Experiencia mínima 1 año con React.
+Conocimiento de REST APIs.
+Trabajo Remoto.', 'Pago puntual, flexibilidad horaria.', 'Intermedio', 'Remoto', 'TechStartup Co.', '2024-01-15', 300.00),
+
+(5, 1, 'Diseñador gráfico para branding', 'Necesitamos diseñador para crear identidad visual completa.',
+'Experiencia en Adobe Creative Suite.
+Portafolio de branding.
+Disponiblidad presencial.', 'Proyecto creativo, oportunidad de crecimiento.', 'Básico', 'Presencial', 'Marketing Agency', '2024-01-14', 150.00),
+
+(6, 1, 'Copywriter para blog de tecnología', 'Buscamos redactor especializado en contenido tecnológico.', 
+'Experiencia en copywriting tech.
+Conocimiento en SEO.
+Portafolio de artículos.', 'Proyecto a largo plazo, buen pago.', 'Avanzado', 'Híbrido', 'Tech Blog Inc.', '2024-01-13', 600.00);

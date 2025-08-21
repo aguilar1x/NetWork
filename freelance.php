@@ -8,6 +8,7 @@ y permite a los usuarios buscar y aplicar a proyectos
 */
 
 require_once 'app/models/user.php';
+require_once 'app/config/db.php';
 
 // Verificar si el usuario está logueado
 if (!User::isLoggedIn()) {
@@ -17,16 +18,28 @@ if (!User::isLoggedIn()) {
 
 // Obtener información del usuario actual
 $currentUser = User::getCurrentUser();
+$es_admin = ($currentUser['rol'] === 1); // Solo los admin pueden crear, editar y eliminar
 
 // Procesar formulario de nueva oferta
 $mensaje = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['publicar_oferta'])) {
     // Logica futura para publicar oferta en la base de datos
     $mensaje = 'Oferta publicada exitosamente';
+
+    // CREAR OFERTA (solo administradores)
+    if ($es_admin) {
+        $nombre = $_POST['nombre'] ?? '';
+        $descripcion = $_POST['descripcion'] ?? '';
+        $nivel = $_POST['nivel'] ?? '';
+        $modalidad = $_POST['modalidad'] ?? '';
+        $publicado_por = $_POST['publicado_por'] ?? '';
+        $fecha = $_POST['fecha'] ?? '';
+        $presupuesto = $_POST['presupuesto'] ?? '';
+    }
 }
 
 // Datos de ejemplo para ofertas (esto vendría de la base de datos)
-$ofertas = [
+/*$ofertas = [
     [
         'id' => 1,
         'titulo' => 'Desarrollador Frontend React',
@@ -78,7 +91,7 @@ $ofertas = [
         'publicado_por' => 'Tech Blog Inc.',
         'fecha' => '2024-01-13'
     ]
-];
+];*/
 
 // Filtros
 $categoria_filtro = $_GET['categoria'] ?? '';
@@ -179,46 +192,46 @@ $tipo_filtro = $_GET['tipo'] ?? '';
             </div>
 
             <?php foreach ($ofertas as $oferta): ?>
-            <article class="offer-card">
-                <div class="row align-items-center">
-                    <div class="col-lg-8">
-                        <div class="d-flex align-items-center mb-2">
-                            <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
-                            <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+                <article class="offer-card">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <div class="d-flex align-items-center mb-2">
+                                <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+                            </div>
+                            <p class="text-muted mb-3"><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <small class="text-muted d-block">Nivel</small>
+                                    <strong><?php echo htmlspecialchars($oferta['nivel']); ?></strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted d-block">Tipo</small>
+                                    <strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted d-block">Publicado por</small>
+                                    <strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong>
+                                </div>
+                                <div class="col-md-3">
+                                    <small class="text-muted d-block">Fecha</small>
+                                    <strong><?php echo date('d/m/Y', strtotime($oferta['fecha'])); ?></strong>
+                                </div>
+                            </div>
                         </div>
-                        <p class="text-muted mb-3"><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <small class="text-muted d-block">Nivel</small>
-                                <strong><?php echo htmlspecialchars($oferta['nivel']); ?></strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted d-block">Tipo</small>
-                                <strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted d-block">Publicado por</small>
-                                <strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted d-block">Fecha</small>
-                                <strong><?php echo date('d/m/Y', strtotime($oferta['fecha'])); ?></strong>
+                        <div class="col-lg-4 text-lg-end">
+                            <div class="price-highlight mb-3"><?php echo htmlspecialchars($oferta['presupuesto']); ?></div>
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#offerModal<?php echo $oferta['id']; ?>">
+                                    <i class="bi bi-eye me-1"></i>Ver detalles
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
+                                    <i class="bi bi-send me-1"></i>Aplicar
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 text-lg-end">
-                        <div class="price-highlight mb-3"><?php echo htmlspecialchars($oferta['presupuesto']); ?></div>
-                        <div>
-                            <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#offerModal<?php echo $oferta['id']; ?>">
-                                <i class="bi bi-eye me-1"></i>Ver detalles
-                            </button>
-                            <button class="btn btn-success btn-sm" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
-                                <i class="bi bi-send me-1"></i>Aplicar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </article>
+                </article>
             <?php endforeach; ?>
         </section>
 
@@ -226,10 +239,10 @@ $tipo_filtro = $_GET['tipo'] ?? '';
         <section class="publish-section">
             <h3><i class="bi bi-plus-circle me-2"></i>Publicar una oferta freelance</h3>
             <p class="text-muted mb-4">¿Tienes un proyecto? Publícalo y encuentra al freelancer perfecto</p>
-            
+
             <form method="POST" class="row g-3">
                 <input type="hidden" name="publicar_oferta" value="1">
-                
+
                 <div class="col-md-6">
                     <label for="tituloOferta" class="form-label">Título de la oferta *</label>
                     <input type="text" class="form-control" id="tituloOferta" name="tituloOferta" required placeholder="Ej: Desarrollador React para e-commerce">
@@ -287,66 +300,66 @@ $tipo_filtro = $_GET['tipo'] ?? '';
 
     <!-- Modales para detalles de ofertas -->
     <?php foreach ($ofertas as $oferta): ?>
-    <div class="modal fade" id="offerModal<?php echo $oferta['id']; ?>" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+        <div class="modal fade" id="offerModal<?php echo $oferta['id']; ?>" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?php echo htmlspecialchars($oferta['titulo']); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
+                            </div>
+                            <div class="col-md-6 text-md-end">
+                                <span class="price-highlight"><?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
+                            </div>
                         </div>
-                        <div class="col-md-6 text-md-end">
-                            <span class="price-highlight"><?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
+
+                        <h6>Descripción del proyecto</h6>
+                        <p><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
+
+                        <h6>Requisitos</h6>
+                        <ul>
+                            <?php foreach ($oferta['requisitos'] as $requisito): ?>
+                                <li><?php echo htmlspecialchars($requisito); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+
+                        <h6>Beneficios</h6>
+                        <p><?php echo htmlspecialchars($oferta['beneficios']); ?></p>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <small class="text-muted">Nivel requerido</small>
+                                <div><strong><?php echo htmlspecialchars($oferta['nivel']); ?></strong></div>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Modalidad</small>
+                                <div><strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong></div>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Publicado por</small>
+                                <div><strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong></div>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Fecha publicación</small>
+                                <div><strong><?php echo date('d/m/Y', strtotime($oferta['fecha'])); ?></strong></div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <h6>Descripción del proyecto</h6>
-                    <p><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
-                    
-                    <h6>Requisitos</h6>
-                    <ul>
-                        <?php foreach ($oferta['requisitos'] as $requisito): ?>
-                        <li><?php echo htmlspecialchars($requisito); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    
-                    <h6>Beneficios</h6>
-                    <p><?php echo htmlspecialchars($oferta['beneficios']); ?></p>
-                    
-                    <hr>
-                    
-                    <div class="row">
-                        <div class="col-md-3">
-                            <small class="text-muted">Nivel requerido</small>
-                            <div><strong><?php echo htmlspecialchars($oferta['nivel']); ?></strong></div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Modalidad</small>
-                            <div><strong><?php echo htmlspecialchars($oferta['tipo']); ?></strong></div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Publicado por</small>
-                            <div><strong><?php echo htmlspecialchars($oferta['publicado_por']); ?></strong></div>
-                        </div>
-                        <div class="col-md-3">
-                            <small class="text-muted">Fecha publicación</small>
-                            <div><strong><?php echo date('d/m/Y', strtotime($oferta['fecha'])); ?></strong></div>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
+                            <i class="bi bi-send me-2"></i>Aplicar a esta oferta
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="aplicarOferta(<?php echo $oferta['id']; ?>)">
-                        <i class="bi bi-send me-2"></i>Aplicar a esta oferta
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
-    </div>
     <?php endforeach; ?>
 
     <!-- Footer -->
