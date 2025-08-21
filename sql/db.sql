@@ -151,16 +151,13 @@ io excepcionales.', 39.99, 12, 'img/figma.jpg'),
 
 INSERT INTO oferta (id_categoria, id_estado, nombre, descripcion, requisitos, beneficios, nivel, modalidad, publicado_por, fecha, presupuesto) VALUES
 (1, 1, 'Desarrollador Frontend React', 'Buscamos desarrollador frontend con experiencia en React para proyecto de 3 meses.', 
-'Experiencia mínima 1 año con React.
-Conocimiento de REST APIs.
-Trabajo Remoto.', 'Pago puntual, flexibilidad horaria.', 'Intermedio', 'Remoto', 'TechStartup Co.', '2024-01-15', 300.00),
+'["Experiencia mínima 1 año con React.", "Conocimiento de REST APIs.", "Trabajo Remoto."]', 
+'Pago puntual, flexibilidad horaria.', 'Intermedio', 'Remoto', 'TechStartup Co.', '2024-01-15', 300.00),
 
 (5, 1, 'Diseñador gráfico para branding', 'Necesitamos diseñador para crear identidad visual completa.',
-'Experiencia en Adobe Creative Suite.
-Portafolio de branding.
-Disponiblidad presencial.', 'Proyecto creativo, oportunidad de crecimiento.', 'Básico', 'Presencial', 'Marketing Agency', '2024-01-14', 150.00),
+'["Experiencia en Adobe Creative Suite.", "Portafolio de branding.", "Disponiblidad presencial."]', 
+'Proyecto creativo, oportunidad de crecimiento.', 'Básico', 'Presencial', 'Marketing Agency', '2024-01-14', 150.00),
 
 (6, 1, 'Copywriter para blog de tecnología', 'Buscamos redactor especializado en contenido tecnológico.', 
-'Experiencia en copywriting tech.
-Conocimiento en SEO.
-Portafolio de artículos.', 'Proyecto a largo plazo, buen pago.', 'Avanzado', 'Híbrido', 'Tech Blog Inc.', '2024-01-13', 600.00);
+'["Experiencia en copywriting tech.", "Conocimiento en SEO.", "Portafolio de artículos."]', 
+'Proyecto a largo plazo, buen pago.', 'Avanzado', 'Híbrido', 'Tech Blog Inc.', '2024-01-13', 600.00);

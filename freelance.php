@@ -86,14 +86,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Validar que todos los campos estén llenos
         if (
-            !empty($id) && !empty($categoria) && !empty($estado) && !empty($nombre) && !empty($descripcion) 
-            && !empty($requisitos) && !empty($beneficios) && !empty($nivel) && !empty($modalidad) 
+            !empty($id) && !empty($categoria) && !empty($estado) && !empty($nombre) && !empty($descripcion)
+            && !empty($requisitos) && !empty($beneficios) && !empty($nivel) && !empty($modalidad)
             && !empty($publicado_por) && !empty($fecha) && !empty($presupuesto)
         ) {
             // Actualizar la oferta en la base de datos
             $stmt = $conn->prepare("UPDATE oferta SET id_categoria = ?, id_estado = ?, nombre = ?, descripcion = ?, requisitos = ?, beneficios = ?, nivel = ?, modalidad = ?, publicado_por = ?, fecha = ?, presupuesto = ? WHERE id = ?");
-            $stmt->bind_param("iissssssssii", $categoria, $estado, $nombre, $descripcion, $requisitos, 
-            $beneficios, $nivel, $modalidad, $publicado_por, $fecha, $presupuesto, $id);
+            $stmt->bind_param(
+                "iissssssssii",
+                $categoria,
+                $estado,
+                $nombre,
+                $descripcion,
+                $requisitos,
+                $beneficios,
+                $nivel,
+                $modalidad,
+                $publicado_por,
+                $fecha,
+                $presupuesto,
+                $id
+            );
 
             if ($stmt->execute()) {
                 $mensaje = 'Oferta actualizada exitosamente';
@@ -283,7 +296,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                         <div class="col-lg-8">
                             <div class="d-flex align-items-center mb-2">
                                 <h5 class="mb-0 me-3"><?php echo htmlspecialchars($oferta['nombre']); ?></h5>
-                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['id_categoria']); ?></span>
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
                             </div>
                             <p class="text-muted mb-3"><?php echo htmlspecialchars($oferta['descripcion']); ?></p>
                             <div class="row">
@@ -396,7 +409,7 @@ $tipo_filtro = $_GET['tipo'] ?? '';
                     <div class="modal-body">
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['id_categoria']); ?></span>
+                                <span class="badge-categoria"><?php echo htmlspecialchars($oferta['categoria']); ?></span>
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <span class="price-highlight">$<?php echo htmlspecialchars($oferta['presupuesto']); ?></span>
@@ -408,9 +421,10 @@ $tipo_filtro = $_GET['tipo'] ?? '';
 
                         <h6>Requisitos</h6>
                         <ul>
-                            <?php foreach ($oferta['requisitos'] as $requisitos): ?>
-                                <li><?php echo htmlspecialchars($requisitos); ?></li>
-                            <?php endforeach; ?>
+                            <?php $requisitos = json_decode($oferta['requisitos'], true);
+                            foreach ($requisitos as $req) {
+                                echo "<li>" . htmlspecialchars($req) . "</li>";
+                            } ?>
                         </ul>
 
                         <h6>Beneficios</h6>
