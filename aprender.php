@@ -164,8 +164,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $result = $conn->query("SELECT * FROM categoria");
 $categorias = $result->fetch_all(MYSQLI_ASSOC);
 
-// Obtener todas los cursos para mostrar
-$result = $conn->query("SELECT * FROM curso");
+// Obtener todas los cursos para mostrar con el nombre de la categoría
+$result = $conn->query("
+    SELECT c.*, cat.nombre as nombre_categoria 
+    FROM curso c 
+    LEFT JOIN categoria cat ON c.id_categoria = cat.id
+");
 $cursos = $result->fetch_all(MYSQLI_ASSOC);
 
 // Datos estáticos hasta tener la db hecha
@@ -360,12 +364,12 @@ $busqueda = $_GET['busqueda'] ?? '';
                         <div class="col-md-6 col-lg-4">
                             <div class="learn-course-card">
                                 <div class="learn-course-image">
-                                    <img src="<?php echo htmlspecialchars($curso['imagen']); ?>" alt="<?php echo htmlspecialchars($curso['nombre']); ?>">
-                                    <span class="learn-course-badge"><?php echo htmlspecialchars($curso['id_categoria']); ?></span>
+                                    <img src="<?php echo htmlspecialchars($curso['imagen']); ?>" alt="<?php echo htmlspecialchars($curso['nombre_categoria'] ?? $curso['nombre']); ?>">
+                                    <span class="learn-course-badge"><?php echo htmlspecialchars($curso['nombre_categoria'] ?? 'Sin categoría'); ?></span>
                                 </div>
                                 <div class="learn-course-content">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?></span>
+                                        <span class="text-muted"><i class="bi bi-clock me-2"></i><?php echo htmlspecialchars($curso['tiempo_horas']); ?> horas</span>
                                         <div class="d-flex align-items-center">
                                             <i class="bi bi-star-fill text-warning me-1"></i>
                                         </div>
@@ -373,7 +377,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                                     <h5 class="mb-3"><?php echo htmlspecialchars($curso['nombre']); ?></h5>
                                     <p class="text-muted mb-4"><?php echo htmlspecialchars($curso['descripcion']); ?></p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="h5 mb-0"><?php echo htmlspecialchars($curso['precio']); ?></span>
+                                        <span class="h5 mb-0">$<?php echo htmlspecialchars($curso['precio']); ?></span>
                                         <button class="learn-btn-outline" data-bs-toggle="modal" data-bs-target="#courseModal<?php echo $curso['id']; ?>">Ver más</button>
                                     </div>
                                 </div>
@@ -427,7 +431,7 @@ $busqueda = $_GET['busqueda'] ?? '';
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['categoria']); ?></span>
+                                    <span class="learn-course-badge mb-2"><?php echo htmlspecialchars($curso['nombre_categoria'] ?? 'Sin categoría'); ?></span>
                                     <h3 class="mb-3"><?php echo htmlspecialchars($curso['titulo']); ?></h3>
                                     <div class="d-flex align-items-center mb-4">
                                         <div class="me-4">
